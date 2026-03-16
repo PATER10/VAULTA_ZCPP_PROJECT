@@ -52,3 +52,50 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+Debug/
+Release/
+x64/Debug/
+x64/Release/
+build/
+
+# C++/Visual Studio intermediate files
+*.obj
+*.o
+*.pch
+*.idb
+*.pdb
+*.ipch
+*.log
+
+# Compiled Static Libraries
+*.lib
+*.a
+
+# Compiled Dynamic Libraries
+*.dll
+*.so
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Visual Studio Code (jeśli używasz)
+.vscode/
+
+# CMake generated files (jeśli używasz CMake)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
