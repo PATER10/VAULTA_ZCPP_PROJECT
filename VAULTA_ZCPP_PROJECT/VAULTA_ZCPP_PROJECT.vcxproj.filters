@@ -44,6 +44,12 @@
     <ClCompile Include="BankController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bcrypt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blowfish.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MainMenu.qml">
@@ -57,18 +63,27 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BankController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bcrypt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="node_blf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="openbsd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="DatabaseManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AuthManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AppController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

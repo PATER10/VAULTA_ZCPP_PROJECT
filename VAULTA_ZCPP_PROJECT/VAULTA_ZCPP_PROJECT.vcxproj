@@ -106,6 +106,8 @@
     <ClCompile Include="AppController.cpp" />
     <ClCompile Include="AuthManager.cpp" />
     <ClCompile Include="BankController.cpp" />
+    <ClCompile Include="bcrypt.cpp" />
+    <ClCompile Include="blowfish.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="LoginScreen.qml" />
@@ -115,8 +117,11 @@
     <None Include="main.qml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppController.h" />
-    <ClInclude Include="AuthManager.h" />
+    <ClInclude Include="bcrypt.h" />
+    <ClInclude Include="node_blf.h" />
+    <ClInclude Include="openbsd.h" />
+    <QtMoc Include="AppController.h" />
+    <QtMoc Include="AuthManager.h" />
     <ClInclude Include="BankController.h" />
     <QtMoc Include="DatabaseManager.h" />
   </ItemGroup>

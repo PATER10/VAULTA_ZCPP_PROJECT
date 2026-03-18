@@ -177,7 +177,8 @@ Rectangle {
             Text { text: qsTr("SIGN UP"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
 
             onClicked: {
-                /*var result = bankSystem.signUpNewUser(userName.text,userSurname.text, passwordInput.text, pinInput.text);
+                // @disable-check unqualified-access
+                var result = backend.auth.registerUser(userName.text,userSurname.text, passwordInput.text, pinInput.text);
                     
                 if(result.success == true) {
                     console.log("Konto użytkownika zostało utworzone!");
@@ -189,10 +190,10 @@ Rectangle {
                     successPopup.open()
 
                 } else {
-                    console.log("Błąd logowania");
+                    console.log("Błąd rejestracji");
                     signUpErr.visible = true
                 }
-            */
+            
             }
         }
         Row{
