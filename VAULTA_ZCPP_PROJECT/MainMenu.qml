@@ -12,14 +12,14 @@ Rectangle {
         spacing: 35
         width: 300
         Text{
-            text: "WELCOME TO VAULTA"
+            text: qsTr("WELCOME TO VAULTA")
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 24
             font.bold: true
             color: "#281C9D"
         }
         Text{
-            text: "Choose an option"
+            text: qsTr("Choose an option")
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 16
             color: "#343434"
@@ -34,7 +34,7 @@ Rectangle {
                 NumberAnimation { duration: 200 } 
             }
             Text{
-                text: "ATM"
+                text: qsTr("ATM")
                 color: "white"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter

@@ -46,14 +46,14 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter 
 
         Text {
-            text: "Welcome to VAULTA"
+            text: qsTr("Welcome to VAULTA")
             color: "#281C9D"
             font.bold: true
             font.pixelSize: 24
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Text {
-            text: "Hello there, create New account"
+            text: qsTr("Hello there, create New account")
             font.bold: true
             font.pixelSize: 16
             color: "#343434"
@@ -62,7 +62,7 @@ Rectangle {
 
         TextField {
             id: userName
-            placeholderText: "Name"
+            placeholderText: qsTr("Name")
             palette.placeholderText: "gray"
             palette.text: "black"
             height: 40
@@ -83,7 +83,7 @@ Rectangle {
         }
         TextField {
             id: userSurname
-            placeholderText: "Surname"
+            placeholderText: qsTr("Surname")
             palette.placeholderText: "gray"
             palette.text: "black"
             height: 40
@@ -105,7 +105,7 @@ Rectangle {
 
         TextField {
             id: passwordInput
-            placeholderText: "Password"
+            placeholderText: qsTr("Password")
             palette.placeholderText: "gray"
             palette.text: "black"
             height: 40
@@ -128,7 +128,7 @@ Rectangle {
 
         TextField {
             id: pinInput
-            placeholderText: "PIN (4 digits)"
+            placeholderText: qsTr("PIN (4 digits)")
             palette.placeholderText: "gray"
             palette.text: "black"
             height: 40
@@ -151,7 +151,7 @@ Rectangle {
         }
         Text{
             id: signUpErr
-            text: "Invalid Data! Please check your details."
+            text: qsTr("Invalid Data! Please check your details.")
             font.bold: true
             visible: false
             font.pixelSize: 14
@@ -174,7 +174,7 @@ Rectangle {
                 cursorShape: Qt.PointingHandCursor
                 }
             }
-            Text { text: "SIGN UP"; color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
+            Text { text: qsTr("SIGN UP"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
 
             onClicked: {
                 /*var result = bankSystem.signUpNewUser(userName.text,userSurname.text, passwordInput.text, pinInput.text);
@@ -199,7 +199,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 10
             Text {
-                text: "Have an account?"
+                text: qsTr("Have an account?")
                 font.bold: true
                 font.pixelSize: 14
                 color: "#343434"
@@ -217,7 +217,7 @@ Rectangle {
                     }
                 }
 
-                Text{ text:"Sign in"; font.pixelSize: 14; font.bold: true; color: "#281c9d"}
+                Text{ text:qsTr("Sign in"); font.pixelSize: 14; font.bold: true; color: "#281c9d"}
 
                 onClicked: {
                     signUpScreenRoot.StackView.view.pop()
@@ -247,7 +247,7 @@ Rectangle {
             width: 320
 
             Text {
-                text: "SUCCESS!"
+                text: qsTr("SUCCESS!")
                 font.bold: true
                 font.pixelSize: 26
                 color: "#281C9D"
@@ -255,7 +255,7 @@ Rectangle {
             }
             
             Text {
-                text: "Your account has been created."
+                text: qsTr("Your account has been created.")
                 font.pixelSize: 18
                 font.bold: true
                 color: "#666666"
@@ -268,7 +268,7 @@ Rectangle {
                 spacing: 5
                 width: parent.width
                 
-                Text { text: "Your User ID (Login):"; font.pixelSize: 12; color: "#343434" }
+                Text { text: qsTr("Your User ID (Login):"); font.pixelSize: 12; color: "#343434" }
                 TextInput { 
                     id: userIdText
                     text: signUpScreenRoot.newUserId
@@ -301,7 +301,7 @@ Rectangle {
                     }
                 }
                 
-                Text { text: "Account Number:"; color: "#343434"; font.pixelSize: 12; topPadding: 10 }
+                Text { text: qsTr("Account Number:"); color: "#343434"; font.pixelSize: 12; topPadding: 10 }
                 TextInput { 
                     id: userIdText2
                     text: signUpScreenRoot.newAccountNumber
@@ -334,7 +334,7 @@ Rectangle {
                     }
                 }
 
-                Text { text: "Card Number:"; color: "#343434"; font.pixelSize: 12; topPadding: 10 }
+                Text { text: qsTr("Card Number:"); color: "#343434"; font.pixelSize: 12; topPadding: 10 }
                 TextInput { 
                     id: userIdText3
                     text: signUpScreenRoot.newCardNumber
@@ -357,7 +357,7 @@ Rectangle {
                     Menu {
                         id: userIdMenu3
                         MenuItem {
-                            text: "Copy"
+                            text: qsTr("Copy")
                             onTriggered: {
                                 userIdText3.selectAll()
                                 userIdText3.copy()
@@ -369,7 +369,7 @@ Rectangle {
                 
             }
 
-                Text { text: "Please keep your details for future logins!"; color: "#d40f12"; font.pixelSize: 16; topPadding: 5}
+                Text { text: qsTr("Please keep your details for future logins!"); color: "#d40f12"; font.pixelSize: 16; topPadding: 5}
 
                 Button {
                     id: signUpInfoBtn
@@ -380,7 +380,7 @@ Rectangle {
                     Behavior on width { NumberAnimation { duration: 200 } }
 
                     Text{
-                        text: "CONFIRM"
+                        text: qsTr("CONFIRM")
                         color: "white"
                         anchors.fill: parent
                         horizontalAlignment: Text.AlignHCenter

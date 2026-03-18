@@ -103,13 +103,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AppController.cpp" />
     <ClCompile Include="AuthManager.cpp" />
+    <ClCompile Include="BankController.cpp" />
+    <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="LoginScreen.qml" />
     <None Include="MainMenu.qml" />
     <None Include="SignUpScreen.qml" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppController.h" />
+    <ClInclude Include="AuthManager.h" />
+    <ClInclude Include="BankController.h" />
+    <QtMoc Include="DatabaseManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

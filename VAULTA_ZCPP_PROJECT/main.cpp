@@ -3,6 +3,7 @@
 #include <QSqlDatabase>
 #include <QDebug>
 #include <QSqlError>
+#include "DatabaseManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,10 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+
+    DatabaseManager dbManager;
+
+    dbManager.connectToDatabase();
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/vaulta_zcpp_project/main.qml")));
