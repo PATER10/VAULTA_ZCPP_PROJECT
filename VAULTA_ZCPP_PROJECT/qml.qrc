@@ -4,5 +4,6 @@
         <file>MainMenu.qml</file>
         <file>LoginScreen.qml</file>
         <file>SignUpScreen.qml</file>
+        <file>UserDashboard.qml</file>
     </qresource>
 </RCC>

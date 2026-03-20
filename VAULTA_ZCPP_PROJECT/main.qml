@@ -4,6 +4,7 @@ import QtQuick.Controls 6.10
 
 
 Window {
+    id: appRoot
     visible: true
     width: 560
     height: 500

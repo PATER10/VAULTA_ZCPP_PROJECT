@@ -41,14 +41,14 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter 
 
         Text {
-            text: "Welcome Back"
+            text: qsTr("Welcome Back")
             color: "#281C9D"
             font.bold: true
             font.pixelSize: 24
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Text {
-            text: "Hello there, sign in to continue"
+            text: qsTr("Hello there, sign in to continue")
             font.bold: true
             font.pixelSize: 16
             color: "#343434"
@@ -57,7 +57,7 @@ Rectangle {
 
         TextField {
             id: userIdInput
-            placeholderText: "User ID"
+            placeholderText: qsTr("User ID")
             palette.placeholderText: "gray"
             palette.text: "black"
             height: 40
@@ -85,7 +85,7 @@ Rectangle {
         }
         TextField {
             id: passwordInput
-            placeholderText: "Password"
+            placeholderText: qsTr("Password")
             palette.placeholderText: "gray"
             palette.text: "black"
             height: 40
@@ -106,7 +106,7 @@ Rectangle {
         }
         Text{
             id: signInErr
-            text: "Invalid User ID or password"
+            text: qsTr("Invalid User ID or password")
             font.bold: true
             visible: false
             font.pixelSize: 14
@@ -128,16 +128,17 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                 }
             }
-            Text { text: "SIGN IN"; color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
+            Text { text: qsTr("SIGN IN"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
             onClicked: {
-                /* var uid = parseInt(userIdInput.text);
+                var uid = parseInt(userIdInput.text);
                 if(isNaN(uid)) uid = 0;
 
-                var result = bankSystem.loginUser(uid, passwordInput.text);
+                var result = appController.auth.loginUser(uid, passwordInput.text);
                     
                 if(result.success === true) {
                            
-                    var dataResult = bankSystem.getUserData(uid);
+                    var dataResult = appController.bankManager.getAccountData(uid);
+                    //var transactionsResult = appController.bankManager.getTransactions(uid);
                         
                     loginScreenRoot.StackView.view.push("UserDashboard.qml", {
                     "userId": uid,
@@ -147,7 +148,7 @@ Rectangle {
                     "accountBalance": dataResult.balance,
                     "accountNumber": dataResult.accountNumber,
                     "accountCurrency": dataResult.currency,
-                    "recentTransactions": dataResult.transactions,
+                    //"recentTransactions": dataResult.transactions,
                     "cardNumber": dataResult.cardNumber
                     })
 
@@ -159,15 +160,14 @@ Rectangle {
                     signInErr.visible = true
                     userIdInput.text = ""
                     passwordInput.text = ""
-                }
-                */ 
+                } 
             }
         }
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 10
             Text {
-                text: "Don't have an account?"
+                text: qsTr("Don't have an account?")
                 font.bold: true
                 font.pixelSize: 14
                 color: "#343434"
@@ -185,7 +185,7 @@ Rectangle {
                     }
                 }
 
-                Text{ text:"Sign up"; font.pixelSize: 14; font.bold: true; color: "#281c9d"}
+                Text{ text:qsTr("Sign up"); font.pixelSize: 14; font.bold: true; color: "#281c9d"}
 
                 onClicked: {
                     loginScreenRoot.StackView.view.push("SignUpScreen.qml")
