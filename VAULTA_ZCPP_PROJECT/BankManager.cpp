@@ -9,11 +9,12 @@ BankManager::BankManager(QObject* parent)
 Q_INVOKABLE QVariantMap BankManager::getAccountData(int uId)
 {
 	QVariantMap result;
+	result["success"] = false;
 
 	QSqlDatabase db = QSqlDatabase::database();
 	QSqlQuery query;
 
-	query.prepare("SELECT a.account_number, a.balance, a.currency, a.account_type, c.card_number" 
+	query.prepare("SELECT a.account_number, a.balance, a.currency, a.account_type, c.card_number " 
 		"FROM accounts a LEFT JOIN cards c ON a.id=c.account_id WHERE a.user_id = :uId");
 	query.bindValue(":uId", uId);
 
@@ -22,6 +23,7 @@ Q_INVOKABLE QVariantMap BankManager::getAccountData(int uId)
 		return result;
 	}
 
+	result["success"] = true;
 	result["accNumber"] = query.value(0).toString();
 	result["balance"] = query.value(1).toString();
 	result["currency"] = query.value(2).toString();

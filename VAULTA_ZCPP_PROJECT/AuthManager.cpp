@@ -109,6 +109,10 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 {
 	QVariantMap result;
 	result["success"] = false;
+
+	if (login < 1 || password.length() < 5) {
+		return result;
+	}
 	
 	QSqlDatabase db = QSqlDatabase::database();
 	QSqlQuery query;
