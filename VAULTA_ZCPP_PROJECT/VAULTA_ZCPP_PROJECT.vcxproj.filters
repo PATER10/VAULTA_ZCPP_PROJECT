@@ -41,7 +41,7 @@
     <ClCompile Include="AppController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BankController.cpp">
+    <ClCompile Include="BankManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bcrypt.cpp">
@@ -61,11 +61,11 @@
     <None Include="SignUpScreen.qml">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="UserDashboard.qml">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BankController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="bcrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,6 +84,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AppController.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="BankManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

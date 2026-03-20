@@ -34,11 +34,10 @@ AuthManager::AuthManager(QObject* parent)
 //register new user account
 Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname, QString password, QString pin)
 {
-	qDebug() << name << surname << password << pin;
 	QVariantMap result;
+	result["success"] = false;
 
-	if (name.length() < 1 || surname.length() < 1 || password.length() < 5 || pin.length() != 4) {
-		result["success"] = false;
+	if (name.length() < 1 || surname.length() < 1 || password.length() < 5 || pin.length() != 4) {;
 		return result;
 	}
 
@@ -102,5 +101,41 @@ Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname,
 		result["accountNumber"] = QString::fromStdString(accountNumber);
 		result["cardNumber"] = QString::fromStdString(cardNumber);
 	}
+	return result;
+}
+
+//login is the same like userId
+Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
+{
+	QVariantMap result;
+	result["success"] = false;
+	
+	QSqlDatabase db = QSqlDatabase::database();
+	QSqlQuery query;
+
+	query.prepare("SELECT name, surname, password, role FROM users WHERE id= :login");
+	query.bindValue(":login", login);
+
+	if (!query.exec() || !query.next()) {
+		qDebug() << query.lastError();
+		return result;
+	}
+
+	QString qName = query.value(0).toString();
+	QString qSurname = query.value(1).toString();
+	QString qPass = query.value(2).toString();
+	QString qRole = query.value(3).toString();
+	QString qInitials = qName.left(1) + qSurname.left(1);
+
+	qDebug() << qName << " " << qSurname << " " << qPass << " " << qRole << " " << qInitials;
+
+	if (bcrypt::validatePassword(password.toStdString(), qPass.toStdString())) {
+		result["success"]=true;
+		result["name"] = qName;
+		result["surname"] = qSurname;
+		result["role"] = qRole;
+		result["initials"] = qInitials;
+	}
+
 	return result;
 }

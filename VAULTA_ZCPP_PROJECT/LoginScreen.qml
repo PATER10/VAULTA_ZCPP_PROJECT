@@ -130,14 +130,15 @@ Rectangle {
             }
             Text { text: qsTr("SIGN IN"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
             onClicked: {
-                /* var uid = parseInt(userIdInput.text);
+                var uid = parseInt(userIdInput.text);
                 if(isNaN(uid)) uid = 0;
 
-                var result = bankSystem.loginUser(uid, passwordInput.text);
+                var result = appController.auth.loginUser(uid, passwordInput.text);
                     
                 if(result.success === true) {
                            
-                    var dataResult = bankSystem.getUserData(uid);
+                    var dataResult = appController.bankManager.getAccountData(uid);
+                    //var transactionsResult = appController.bankManager.getTransactions(uid);
                         
                     loginScreenRoot.StackView.view.push("UserDashboard.qml", {
                     "userId": uid,
@@ -147,7 +148,7 @@ Rectangle {
                     "accountBalance": dataResult.balance,
                     "accountNumber": dataResult.accountNumber,
                     "accountCurrency": dataResult.currency,
-                    "recentTransactions": dataResult.transactions,
+                    //"recentTransactions": dataResult.transactions,
                     "cardNumber": dataResult.cardNumber
                     })
 
@@ -159,8 +160,7 @@ Rectangle {
                     signInErr.visible = true
                     userIdInput.text = ""
                     passwordInput.text = ""
-                }
-                */ 
+                } 
             }
         }
         Row{

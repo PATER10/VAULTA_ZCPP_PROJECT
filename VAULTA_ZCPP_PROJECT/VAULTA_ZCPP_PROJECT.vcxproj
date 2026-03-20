@@ -105,7 +105,7 @@
   <ItemGroup>
     <ClCompile Include="AppController.cpp" />
     <ClCompile Include="AuthManager.cpp" />
-    <ClCompile Include="BankController.cpp" />
+    <ClCompile Include="BankManager.cpp" />
     <ClCompile Include="bcrypt.cpp" />
     <ClCompile Include="blowfish.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
@@ -113,6 +113,7 @@
     <None Include="LoginScreen.qml" />
     <None Include="MainMenu.qml" />
     <None Include="SignUpScreen.qml" />
+    <None Include="UserDashboard.qml" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
   </ItemGroup>
@@ -122,7 +123,7 @@
     <ClInclude Include="openbsd.h" />
     <QtMoc Include="AppController.h" />
     <QtMoc Include="AuthManager.h" />
-    <ClInclude Include="BankController.h" />
+    <QtMoc Include="BankManager.h" />
     <QtMoc Include="DatabaseManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

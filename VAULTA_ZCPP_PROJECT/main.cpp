@@ -19,13 +19,14 @@ int main(int argc, char *argv[])
     DatabaseManager dbManager;
     if (!dbManager.connectToDatabase()) {
         qDebug() << "CRITICAL ERROR: No connection with PostgreSQL!!!";
+        return -1;
     }
 
     AppController appController;
 
     QQmlApplicationEngine engine;
 
-    engine.rootContext()->setContextProperty("backend", &appController);
+    engine.rootContext()->setContextProperty("appController", &appController);
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/vaulta_zcpp_project/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

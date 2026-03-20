@@ -177,8 +177,7 @@ Rectangle {
             Text { text: qsTr("SIGN UP"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
 
             onClicked: {
-                // @disable-check unqualified-access
-                var result = backend.auth.registerUser(userName.text,userSurname.text, passwordInput.text, pinInput.text);
+                var result = appController.auth.registerUser(userName.text,userSurname.text, passwordInput.text, pinInput.text);
                     
                 if(result.success == true) {
                     console.log("Konto użytkownika zostało utworzone!");
