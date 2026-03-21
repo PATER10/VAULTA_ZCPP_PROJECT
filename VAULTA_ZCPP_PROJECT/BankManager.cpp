@@ -6,7 +6,7 @@ BankManager::BankManager(QObject* parent)
 
 }
 
-Q_INVOKABLE QVariantMap BankManager::getAccountData(int uId)
+Q_INVOKABLE QVariantMap BankManager::getAccountData()
 {
 	QVariantMap result;
 	result["success"] = false;
@@ -14,9 +14,11 @@ Q_INVOKABLE QVariantMap BankManager::getAccountData(int uId)
 	QSqlDatabase db = QSqlDatabase::database();
 	QSqlQuery query;
 
+	int currentId = m_auth->currentUserId();
+
 	query.prepare("SELECT a.account_number, a.balance, a.currency, a.account_type, c.card_number " 
 		"FROM accounts a LEFT JOIN cards c ON a.id=c.account_id WHERE a.user_id = :uId");
-	query.bindValue(":uId", uId);
+	query.bindValue(":uId", currentId);
 
 	if (!query.exec() || !query.next()) {
 		qDebug() << query.lastError();
@@ -33,17 +35,19 @@ Q_INVOKABLE QVariantMap BankManager::getAccountData(int uId)
 	return result;
 }
 
-Q_INVOKABLE QVariantList BankManager::getLatestTransactions(int uid)
+Q_INVOKABLE QVariantList BankManager::getLatestTransactions()
 {
 	QVariantList list;
 
 	QSqlDatabase db = QSqlDatabase::database();
 	QSqlQuery query;
 
+	int currentUserId = m_auth->currentUserId();
+
 	query.prepare("SELECT title, amount, date, type,  "
 		"FROM transactions WHERE sender_id = :id OR receiver_id = :id "
 		"ORDER BY date DESC LIMIT 5");
-	query.bindValue(":id", uid);
+	query.bindValue(":id", currentUserId);
 
 	if (!query.exec()) {
 		while (query.next()) {
