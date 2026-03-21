@@ -137,16 +137,16 @@ Rectangle {
                     
                 if(result.success === true) {
                            
-                    var dataResult = appController.bankManager.getAccountData(uid);
+                    var dataResult = appController.bankManager.getAccountData();
                     //var transactionsResult = appController.bankManager.getTransactions(uid);
                         
                     loginScreenRoot.StackView.view.push("UserDashboard.qml", {
-                    "userId": uid,
+                    //"userId": uid,
                     "userName": result.name, 
                     "userSurname": result.surname,
-                    "userInitials": result.initials,
+                    //"userInitials": result.initials,
                     "accountBalance": dataResult.balance,
-                    "accountNumber": dataResult.accountNumber,
+                    "accountNumber": dataResult.accNumber,
                     "accountCurrency": dataResult.currency,
                     //"recentTransactions": dataResult.transactions,
                     "cardNumber": dataResult.cardNumber
