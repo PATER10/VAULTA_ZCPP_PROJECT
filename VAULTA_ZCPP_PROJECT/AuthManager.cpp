@@ -134,6 +134,7 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 	qDebug() << qName << " " << qSurname << " " << qPass << " " << qRole << " " << qInitials;
 
 	if (bcrypt::validatePassword(password.toStdString(), qPass.toStdString())) {
+		m_currentUserId = login;
 		result["success"]=true;
 		result["name"] = qName;
 		result["surname"] = qSurname;
@@ -142,4 +143,9 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 	}
 
 	return result;
+}
+
+Q_INVOKABLE void AuthManager::logout(){
+	m_currentUserId = -1;
+	qDebug() << "User logged out.";
 }
