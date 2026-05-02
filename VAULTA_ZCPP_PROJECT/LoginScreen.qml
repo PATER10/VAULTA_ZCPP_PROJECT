@@ -144,7 +144,7 @@ Rectangle {
                     //"userId": uid,
                     "userName": result.name, 
                     "userSurname": result.surname,
-                    //"userInitials": result.initials,
+                    "userInitials": result.initials,
                     "accountBalance": dataResult.balance,
                     "accountNumber": dataResult.accNumber,
                     "accountCurrency": dataResult.currency,

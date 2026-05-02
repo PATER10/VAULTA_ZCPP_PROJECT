@@ -109,6 +109,7 @@
     <ClCompile Include="bcrypt.cpp" />
     <ClCompile Include="blowfish.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
+    <ClCompile Include="envReader.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="LoginScreen.qml" />
     <None Include="MainMenu.qml" />
