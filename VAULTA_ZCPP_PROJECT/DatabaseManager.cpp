@@ -1,4 +1,5 @@
 #include "DatabaseManager.h"
+#include "envReader.cpp"
 
 DatabaseManager::DatabaseManager(QObject* parent) : QObject(parent)
 {
@@ -15,11 +16,14 @@ DatabaseManager::~DatabaseManager()
 
 bool DatabaseManager::connectToDatabase()
 {
-    m_db.setHostName("localhost");
+    Env::load(".env");
+
+    m_db.setHostName(qgetenv("DB_HOST"));
     m_db.setDatabaseName("VAULTA");
-    m_db.setUserName("postgres");
-    m_db.setPassword("student");
-    m_db.setPort(5432);
+    m_db.setUserName(qgetenv("DB_USER"));
+    m_db.setPassword(qgetenv("DB_PASS"));
+    int port = qgetenv("DB_PORT").toInt();
+    m_db.setPort(port > 0 ? port : 5432);
 
     if (!m_db.open()) {
         qDebug() << "ERROR: No connection with Database!!!" << m_db.lastError().text();

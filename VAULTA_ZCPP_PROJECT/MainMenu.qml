@@ -65,7 +65,7 @@ Rectangle {
                 NumberAnimation { duration: 200 } 
             }
             Text{
-                text: "Vaulta app"
+                text: qsTr("Vaulta app")
                 color: "white"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter

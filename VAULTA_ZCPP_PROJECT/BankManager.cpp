@@ -1,5 +1,6 @@
 #include "BankManager.h"
 #include <QDate>
+#include <QDebug>
 
 BankManager::BankManager(QObject* parent)
 {

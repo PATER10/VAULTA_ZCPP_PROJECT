@@ -5,5 +5,10 @@
         <file>LoginScreen.qml</file>
         <file>SignUpScreen.qml</file>
         <file>UserDashboard.qml</file>
+        <file>HomeView.qml</file>
+        <file>AccountsView.qml</file>
+        <file>TransactionsView.qml</file>
+        <file>TransfersView.qml</file>
+        <file>UserDetailsView.qml</file>
     </qresource>
 </RCC>

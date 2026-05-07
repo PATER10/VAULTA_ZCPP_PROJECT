@@ -50,6 +50,9 @@
     <ClCompile Include="blowfish.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="envReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MainMenu.qml">
@@ -62,6 +65,21 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="UserDashboard.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="HomeView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="AccountsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="TransfersView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="TransactionsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="UserDetailsView.qml">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

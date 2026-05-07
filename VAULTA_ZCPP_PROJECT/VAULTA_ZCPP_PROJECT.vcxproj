@@ -109,11 +109,17 @@
     <ClCompile Include="bcrypt.cpp" />
     <ClCompile Include="blowfish.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
+    <ClCompile Include="envReader.cpp" />
     <ClCompile Include="main.cpp" />
+    <None Include="AccountsView.qml" />
+    <None Include="HomeView.qml" />
     <None Include="LoginScreen.qml" />
     <None Include="MainMenu.qml" />
     <None Include="SignUpScreen.qml" />
+    <None Include="TransactionsView.qml" />
+    <None Include="TransfersView.qml" />
     <None Include="UserDashboard.qml" />
+    <None Include="UserDetailsView.qml" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
   </ItemGroup>

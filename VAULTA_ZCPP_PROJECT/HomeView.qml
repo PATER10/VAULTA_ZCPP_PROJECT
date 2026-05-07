@@ -1,0 +1,173 @@
+﻿import QtQuick 6.10
+import QtQuick.Controls.Basic 6.10
+
+Item{
+    id: homeViewRoot
+    anchors.fill: parent
+    
+    property string accountBalance: "0.00"
+    property string accountNumber: "----"
+    property string accountCurrency: "PLN"
+    property var recentTransactions: []
+            
+    property int contentPadding: 30
+
+    Column {
+        id: headerContainer
+        width: parent.width
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: homeViewRoot.contentPadding
+        spacing: 25
+
+        Text {
+            text: qsTr("Dashboard")
+            font.pixelSize: 24
+            font.bold: true
+            color: "#281c9d"
+        }
+
+        Rectangle {
+            width: 300
+            height: 140
+            radius: 16
+            color: "white"
+                    
+            border.color: "#e0e0e0"
+            border.width: 1
+
+            Column {
+                anchors.fill: parent
+                anchors.margins: 20
+                spacing: 10
+
+                Row {
+                    width: parent.width
+                            
+                    Column {
+                        width: parent.width - 50
+                        Text { text: qsTr("Main Account"); font.bold: true; font.pixelSize: 14; color: "black" }
+                        Text { text: qsTr("Standard"); font.pixelSize: 12; color: "#888" }
+                    }
+
+                    Rectangle {
+                        width: 40
+                        height: 40
+                        radius: 20
+                        color: "#f0f0f5"
+                        Text { text: homeViewRoot.accountCurrency; anchors.centerIn: parent; font.bold: true; color: "#281c9d"; font.pixelSize: 10 }
+                    }
+                }
+
+                Text {
+                    text: Number(homeViewRoot.accountBalance).toFixed(2) + " " + homeViewRoot.accountCurrency
+                    font.pixelSize: 20
+                    font.bold: true
+                    color: "#281c9d"
+                }
+                        
+                Text {
+                    text: homeViewRoot.accountNumber
+                    font.pixelSize: 14
+                    color: "#888"
+                }
+            }
+        }
+
+        Text {
+            text: qsTr("Recent Transactions")
+            font.pixelSize: 18
+            font.bold: true
+            color: "#333"
+        }
+    }
+
+        ListView {
+        id: transactionList
+                
+        anchors.top: headerContainer.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: homeViewRoot.contentPadding
+        anchors.topMargin: 15
+
+        bottomMargin: 20
+                
+        clip: true
+        spacing: 15
+                
+        model: homeViewRoot.recentTransactions.slice(0,5)
+
+        delegate: Rectangle {
+            width: parent.width - 80
+            height: 90
+            radius: 12
+            color: "white"
+            border.color: "#eeeeee"; border.width: 1
+
+            Column {
+                anchors.fill: parent
+
+                Rectangle {
+                    width: parent.width; height: 30; color: "transparent"
+                    Text {
+                        text: modelData.date
+                        font.pixelSize: 11; font.bold: true; color: "#999999"
+                        anchors.left: parent.left; anchors.leftMargin: 15
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+                        
+                Rectangle { width: parent.width - 30; height: 1; color: "#f0f0f0"; anchors.horizontalCenter: parent.horizontalCenter }
+
+                Item {
+                    width: parent.width; height: 59
+                            
+                    Rectangle {
+                        id: iconBg
+                        width: 36; height: 36; radius: 18
+                        color: (modelData.type === "IN") ? "#e8f5e9" : "#ffebee"
+                        anchors.left: parent.left; anchors.leftMargin: 15
+                        anchors.verticalCenter: parent.verticalCenter
+                        Text {
+                            text: (modelData.type === "IN") ? "+" : "-"
+                            font.pixelSize: 20; font.bold: true
+                            color: (modelData.type === "IN") ? "#2ecc71" : "#e74c3c"
+                            anchors.centerIn: parent; anchors.verticalCenterOffset: -1
+                        }
+                    }
+
+                    Column {
+                        anchors.left: iconBg.right; anchors.leftMargin: 15
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 3
+                        Text {
+                            text: modelData.title
+                            font.bold: true; font.pixelSize: 14; color: "black"
+                        }
+                        Text {
+                            text: modelData.description
+                            font.pixelSize: 11; color: "#999999"
+                            width: 160; elide: Text.ElideRight
+                        }
+                    }
+
+                    Text {
+                        text: modelData.amount + " " + homeViewRoot.accountCurrency
+                        font.bold: true; font.pixelSize: 14
+                        color: (modelData.type === "IN") ? "#2ecc71" : "#e74c3c"
+                        anchors.right: parent.right; anchors.rightMargin: 15
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+            }
+        }
+                
+        ScrollBar.vertical: ScrollBar { 
+            active: true 
+            width: 10
+        }
+    }
+}
