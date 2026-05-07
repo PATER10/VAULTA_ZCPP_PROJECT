@@ -97,7 +97,7 @@ Rectangle {
                         flat: true
                         
                         Text { 
-                            text: "Home"
+                            text: qsTr("Home")
                             color: (userDashboardRoot.activeTab === "home" || homeBtn.hovered) ? "#281c9d" : "#555"  
                             font.bold: true; horizontalAlignment: Text.AlignHCenter 
                             font.pixelSize: 14
@@ -130,7 +130,7 @@ Rectangle {
                         flat: true
                         leftPadding: 30
                         Text { 
-                            text: "Accounts" 
+                            text: qsTr("Accounts") 
                             color: (userDashboardRoot.activeTab === "accounts" || accBtn.hovered) ? "#281c9d" : "#555" 
                             font.bold: true; horizontalAlignment: Text.AlignHCenter 
                             font.pixelSize: 14
@@ -163,7 +163,7 @@ Rectangle {
                         flat: true
                         leftPadding: 30
                         Text { 
-                            text: "Transfers" 
+                            text: qsTr("Transfers") 
                             color: (userDashboardRoot.activeTab === "transfers" || transfersBtn.hovered) ? "#281c9d" : "#555" 
                             font.bold: true; horizontalAlignment: Text.AlignHCenter 
                             font.pixelSize: 14
@@ -195,7 +195,7 @@ Rectangle {
                         flat: true
                         leftPadding: 30
                         Text { 
-                            text: "Transactions" 
+                            text: qsTr("Transactions") 
                             color: (userDashboardRoot.activeTab === "transactions" || transactionsBtn.hovered) ? "#281c9d" : "#555" 
                             font.bold: true; horizontalAlignment: Text.AlignHCenter 
                             font.pixelSize: 14
@@ -227,7 +227,7 @@ Rectangle {
                         height: 40
                         flat: true
                         Text { 
-                            text: "Log Out"; color: "#d40f12";
+                            text: qsTr("Log Out"); color: "#d40f12";
                             font.bold: true; horizontalAlignment: Text.AlignHCenter 
                             font.pixelSize: 14
                             anchors.horizontalCenter: parent.horizontalCenter

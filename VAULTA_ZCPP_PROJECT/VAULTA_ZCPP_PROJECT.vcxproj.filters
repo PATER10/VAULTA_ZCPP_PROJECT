@@ -67,6 +67,21 @@
     <None Include="UserDashboard.qml">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="HomeView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="AccountsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="TransfersView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="TransactionsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="UserDetailsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bcrypt.h">
