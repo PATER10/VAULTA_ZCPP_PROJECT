@@ -1,12 +1,14 @@
 ﻿import QtQuick 6.10
 import QtQuick.Controls.Basic 6.10
 
-Item {
-    id: transactionsViewRoot
+Item{
+    id: accountViewRoot
     anchors.fill: parent
     
-    property var allTransactions: []
+    property string accountBalance: "0.00"
+    property string accountNumber: "----"
     property string accountCurrency: "PLN"
+    property var recentTransactions: []
             
     property int contentPadding: 30
 
@@ -16,103 +18,100 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: transactionsViewRoot.contentPadding
+        anchors.margins: accountViewRoot.contentPadding
         spacing: 25
 
         Text {
-            text: qsTr("Transaction History")
+            text: qsTr("My accounts")
             font.pixelSize: 24
             font.bold: true
             color: "#281c9d"
         }
-        
-        Text {
-            text: qsTr("Total transactions: ") + transactionsViewRoot.allTransactions.length
-            font.pixelSize: 14
-            color: "#888"
-        }
-    }
 
-    ListView {
-        id: historyList
-        anchors.top: headerContainer.bottom
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: transactionsViewRoot.contentPadding
-        anchors.topMargin: 20
-        
-        bottomMargin: 20
-        clip: true
-        spacing: 15
-        
-        model: transactionsViewRoot.allTransactions
-
-        delegate: Rectangle {
-            width: parent.width - 80
-            height: 90
-            radius: 12
+        Rectangle {
+            width: 300
+            height: 140
+            radius: 16
             color: "white"
-            border.color: "#eeeeee"; border.width: 1
+                    
+            border.color: "#e0e0e0"
+            border.width: 1
 
             Column {
                 anchors.fill: parent
-                
-                Rectangle {
-                    width: parent.width; height: 30; color: "transparent"
-                    Text {
-                        text: modelData.date
-                        font.pixelSize: 11; font.bold: true; color: "#999999"
-                        anchors.left: parent.left; anchors.leftMargin: 15
-                        anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: 20
+                spacing: 10
+
+                Row {
+                    width: parent.width
+                            
+                    Column {
+                        width: parent.width - 50
+                        Text { text: qsTr("Main Account"); font.bold: true; font.pixelSize: 14; color: "black" }
+                        Text { text: qsTr("Standard"); font.pixelSize: 12; color: "#888" }
+                    }
+
+                    Rectangle {
+                        width: 40
+                        height: 40
+                        radius: 20
+                        color: "#f0f0f5"
+                        Text { text: accountViewRoot.accountCurrency; anchors.centerIn: parent; font.bold: true; color: "#281c9d"; font.pixelSize: 10 }
                     }
                 }
-                
-                Rectangle { width: parent.width - 30; height: 1; color: "#f0f0f0"; anchors.horizontalCenter: parent.horizontalCenter }
 
-                Item {
-                    width: parent.width; height: 59
-                    
-                    Rectangle {
-                        id: iconBg
-                        width: 36; height: 36; radius: 18
-                        color: (modelData.type === "IN") ? "#e8f5e9" : "#ffebee"
-                        anchors.left: parent.left; anchors.leftMargin: 15
-                        anchors.verticalCenter: parent.verticalCenter
-                        Text {
-                            text: (modelData.type === "IN") ? "+" : "-"
-                            font.pixelSize: 20; font.bold: true
-                            color: (modelData.type === "IN") ? "#2ecc71" : "#e74c3c"
-                            anchors.centerIn: parent; anchors.verticalCenterOffset: -1
-                        }
-                    }
-
-                    Column {
-                        anchors.left: iconBg.right; anchors.leftMargin: 15
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 3
-                        Text {
-                            text: modelData.title
-                            font.bold: true; font.pixelSize: 14; color: "black"
-                        }
-                        Text {
-                            text: modelData.description
-                            font.pixelSize: 11; color: "#999999"
-                            width: 160; elide: Text.ElideRight
-                        }
-                    }
-
-                    Text {
-                        text: modelData.amount + " " + transactionsViewRoot.accountCurrency
-                        font.bold: true; font.pixelSize: 14
-                        color: (modelData.type === "IN") ? "#2ecc71" : "#e74c3c"
-                        anchors.right: parent.right; anchors.rightMargin: 15
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
+                Text {
+                    text: Number(accountViewRoot.accountBalance).toFixed(2) + " " + accountViewRoot.accountCurrency
+                    font.pixelSize: 20
+                    font.bold: true
+                    color: "#281c9d"
+                }
+                        
+                Text {
+                    text: accountViewRoot.accountNumber
+                    font.pixelSize: 14
+                    color: "#888"
                 }
             }
         }
+    }
+    Button {
+        id: addAccountBtn
+        width: addAccountBtn.hovered ? 42 : 40
+        height: addAccountBtn.hovered ? 42 : 40
         
-        ScrollBar.vertical: ScrollBar { active: true; width: 10 }
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 40 
+        
+        layer.enabled: true
+        
+        background: Rectangle {
+            radius: width / 2
+            color: addAccountBtn.hovered ? "#3A2DCD" : "#281c9d"
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+            }
+        }
+
+        Text {
+            text: "+"
+            font.pixelSize: 36
+            color: "white"
+            anchors.centerIn: parent
+            anchors.verticalCenter: verticalCenter
+            anchors.horizontalCenter: horizontalCenter
+            bottomPadding: 5
+            anchors.verticalCenterOffset: -2
+        }
+
+        onClicked: {
+            console.log("Add currency account clicked (Coming soon)")
+        }
+        
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("Add new account (Coming Soon)")
     }
 }

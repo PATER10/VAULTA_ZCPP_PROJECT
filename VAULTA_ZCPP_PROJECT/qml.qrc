@@ -10,5 +10,8 @@
         <file>TransactionsView.qml</file>
         <file>TransfersView.qml</file>
         <file>UserDetailsView.qml</file>
+        <file>Translations/vaulta_pl.qm</file>
+        <file>images/en_flag.svg</file>
+        <file>images/pl_flag.svg</file>
     </qresource>
 </RCC>
