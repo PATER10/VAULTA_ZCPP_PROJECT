@@ -1,10 +1,53 @@
 ﻿import QtQuick 6.10
 import QtQuick.Controls.Basic 6.10
+import QtQuick.Effects 6.10
 
 Rectangle {
     id: menuRoot
     anchors.fill: parent
     color: "#f5f5f5"
+    Item{
+        width: 40
+        height: 25
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 20
+
+        Rectangle{
+            id:flagContainer
+            anchors.fill: parent
+            color: "white"
+
+            border.color: "#d0d0d0"
+            border.width: 1
+            radius: 3
+            
+            Image{
+                id: flagImg
+                anchors.fill: parent
+                anchors.margins: 1
+                source: L.currentLanguage === "pl" ? "./images/en_flag.svg" : "./images/pl_flag.svg"
+                fillMode: Image.PreserveAspectCrop
+
+                smooth: true
+                mipmap: true
+            }
+            
+        }
+        MouseArea{
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                if(L.currentLanguage === "pl"){
+                    L.setLanguage("en")
+                }else{
+                    L.setLanguage("pl")
+                }
+            }
+            onPressed: flagContainer.opacity = 0.7
+            onReleased: flagContainer.opacity = 1.0
+        }
+    }
 
     Column{
         anchors.horizontalCenter: parent.horizontalCenter
@@ -12,14 +55,14 @@ Rectangle {
         spacing: 35
         width: 300
         Text{
-            text: qsTr("WELCOME TO VAULTA")
+            text: qsTr("WELCOME TO VAULTA") + L.updateTr
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 24
             font.bold: true
             color: "#281C9D"
         }
         Text{
-            text: qsTr("Choose an option")
+            text: qsTr("Choose an option") + L.updateTr
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 16
             color: "#343434"
@@ -34,7 +77,7 @@ Rectangle {
                 NumberAnimation { duration: 200 } 
             }
             Text{
-                text: qsTr("ATM")
+                text: qsTr("ATM") + L.updateTr
                 color: "white"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
@@ -65,7 +108,7 @@ Rectangle {
                 NumberAnimation { duration: 200 } 
             }
             Text{
-                text: qsTr("Vaulta app")
+                text: qsTr("Vaulta app") + L.updateTr
                 color: "white"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter

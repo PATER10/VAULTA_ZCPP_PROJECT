@@ -53,6 +53,9 @@
     <ClCompile Include="envReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LanguageManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MainMenu.qml">
@@ -105,6 +108,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="BankManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LanguageManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

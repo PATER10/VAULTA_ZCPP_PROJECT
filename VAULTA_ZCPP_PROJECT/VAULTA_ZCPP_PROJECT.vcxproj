@@ -110,6 +110,7 @@
     <ClCompile Include="blowfish.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="envReader.cpp" />
+    <ClCompile Include="LanguageManager.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="AccountsView.qml" />
     <None Include="HomeView.qml" />
@@ -125,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bcrypt.h" />
+    <QtMoc Include="LanguageManager.h" />
     <ClInclude Include="node_blf.h" />
     <ClInclude Include="openbsd.h" />
     <QtMoc Include="AppController.h" />
