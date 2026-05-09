@@ -156,7 +156,6 @@ Rectangle {
                     userIdInput.text = ""
                     passwordInput.text = ""
                 } else {
-                    console.log("Błąd logowania");
                     signInErr.visible = true
                     userIdInput.text = ""
                     passwordInput.text = ""

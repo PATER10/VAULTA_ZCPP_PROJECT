@@ -18,7 +18,7 @@ Q_INVOKABLE QVariantMap BankManager::getAccountData()
 	int currentId = m_auth->currentUserId();
 
 	query.prepare("SELECT a.account_number, a.balance, a.currency, a.account_type, c.card_number " 
-		"FROM accounts a LEFT JOIN cards c ON a.id=c.account_id WHERE a.user_id = :uId");
+		"FROM account a LEFT JOIN card c ON a.id=c.account_id WHERE a.user_id = :uId");
 	query.bindValue(":uId", currentId);
 
 	if (!query.exec() || !query.next()) {
@@ -46,7 +46,7 @@ Q_INVOKABLE QVariantList BankManager::getLatestTransactions()
 	int currentUserId = m_auth->currentUserId();
 
 	query.prepare("SELECT title, amount, date, type,  "
-		"FROM transactions WHERE sender_id = :id OR receiver_id = :id "
+		"FROM transaction WHERE sender_id = :id OR receiver_id = :id "
 		"ORDER BY date DESC LIMIT 5");
 	query.bindValue(":id", currentUserId);
 

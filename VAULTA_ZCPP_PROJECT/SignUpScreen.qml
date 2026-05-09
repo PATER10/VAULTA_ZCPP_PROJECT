@@ -169,9 +169,9 @@ Rectangle {
                 radius: 12
                 color: signInBtn.hovered ? "#3A2DCD" : "#281c9d" 
                 MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                 }
             }
             Text { text: qsTr("SIGN UP"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
@@ -179,9 +179,7 @@ Rectangle {
             onClicked: {
                 var result = appController.auth.registerUser(userName.text,userSurname.text, passwordInput.text, pinInput.text);
                     
-                if(result.success == true) {
-                    console.log("Konto użytkownika zostało utworzone!");
-                        
+                if(result.success == true) {   
                     signUpScreenRoot.newUserId = result.userId
                     signUpScreenRoot.newAccountNumber = result.accountNumber
                     signUpScreenRoot.newCardNumber = result.cardNumber
@@ -189,7 +187,6 @@ Rectangle {
                     successPopup.open()
 
                 } else {
-                    console.log("Błąd rejestracji");
                     signUpErr.visible = true
                 }
             

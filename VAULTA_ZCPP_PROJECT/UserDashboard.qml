@@ -292,7 +292,7 @@ Rectangle {
                         item.accountBalance = Qt.binding(function() { return userDashboardRoot.accountBalance })
                         item.accountNumber = Qt.binding(function() { return userDashboardRoot.accountNumber })
                         item.accountCurrency = Qt.binding(function() { return userDashboardRoot.accountCurrency })
-
+                        //TO CHANGE!!!!!!!!!!!!!!!!!
                         item.transferSuccessful.connect(function(newBalance){
                             var freshData = bankSystem.getUserData(userDashboardRoot.userId);
 

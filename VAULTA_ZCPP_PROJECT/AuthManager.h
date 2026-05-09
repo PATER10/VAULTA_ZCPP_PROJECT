@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <string>
+#include "User.h"
 
 class AuthManager : public QObject {
 	Q_OBJECT
@@ -13,6 +14,7 @@ public:
 	std::string generateAccountNumber(int id);
 
 	explicit AuthManager(QObject* parent = nullptr);
+	~AuthManager();
 
 	Q_INVOKABLE QVariantMap registerUser(QString name, QString surname, QString password, QString pin);
 
@@ -25,5 +27,6 @@ public:
 
 private: 
 	int m_currentUserId = -1;
+	User* m_currentUser;
 
 };
