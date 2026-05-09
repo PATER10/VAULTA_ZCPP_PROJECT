@@ -131,13 +131,13 @@
     <None Include="main.qml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Account.h" />
+    <QtMoc Include="Account.h" />
     <ClInclude Include="bcrypt.h" />
-    <ClInclude Include="Card.h" />
+    <QtMoc Include="Card.h" />
     <ClInclude Include="CurrencyAccount.h" />
     <ClInclude Include="StandardAccount.h" />
     <ClInclude Include="Transaction.h" />
-    <ClInclude Include="User.h" />
+    <QtMoc Include="User.h" />
     <QtMoc Include="LanguageManager.h" />
     <ClInclude Include="node_blf.h" />
     <ClInclude Include="openbsd.h" />

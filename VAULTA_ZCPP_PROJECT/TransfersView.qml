@@ -5,10 +5,6 @@ Item {
     id: transfersViewRoot
     anchors.fill: parent
     
-    property string accountBalance: "0.00"
-    property string accountNumber: "----"
-    property string accountCurrency: "PLN"
-    
     signal transferSuccessful(string newBalance)
 
     property int contentPadding: 30
@@ -39,7 +35,7 @@ Item {
                     font.bold: true
                 }
                 Text {
-                    text: Number(transfersViewRoot.accountBalance).toFixed(2) + " " + transfersViewRoot.accountCurrency
+                    text: Number(appController.auth.currentUser.account.balance).toFixed(2) + " " + appController.auth.currentUser.account.currency
                     color: "#281c9d"
                     font.pixelSize: 14
                     font.bold: true

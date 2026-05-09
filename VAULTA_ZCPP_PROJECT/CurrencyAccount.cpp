@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <sstream>
 
-CurrencyAccount::CurrencyAccount(int userId, string accountNumber, double balance, string currency, string accountType)
+CurrencyAccount::CurrencyAccount(int userId, QString accountNumber, double balance, QString currency, QString accountType)
 	:Account(userId, accountNumber, balance, currency, "Currency") {}
 
 string CurrencyAccount::generateAccountNumber(int id, string Currency) {

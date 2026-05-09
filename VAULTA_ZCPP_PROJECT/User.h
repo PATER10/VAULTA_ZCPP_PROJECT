@@ -1,27 +1,50 @@
 #pragma once
 #include <string>
+#include <QObject>
+#include "Account.h"
+#include "Card.h"
 
 using namespace std;
 
-class User
+class User : public QObject
 {
+	Q_OBJECT
+	Q_PROPERTY(int userId READ getUserId CONSTANT)
+	Q_PROPERTY(QString name READ getUserName NOTIFY userDataChanged)
+	Q_PROPERTY(QString surname READ getUserSurname NOTIFY userDataChanged)
+	Q_PROPERTY(QString initials READ getInitials NOTIFY userDataChanged)
+	Q_PROPERTY(Account* account READ getAccount NOTIFY accountChanged)
+	Q_PROPERTY(Card* card READ getCard NOTIFY cardChanged)
 private:
 	int m_id;
-	string m_name, m_surname, m_role, m_password;
+	QString m_name, m_surname, m_role, m_password;
+	Account* m_account = nullptr;
+	Card* m_card = nullptr;
 
 public:
-	User();
-	User(int userId, string userName, string userSurname, string role, string password)
-		: m_id(userId), m_name(userName), m_surname(userSurname), m_role(role), m_password(password) {}
+	explicit User(QObject *parent = nullptr) : QObject(parent) {}
+
+	User(int userId, QString userName, QString userSurname, QString role, QString password, QObject *parent = nullptr)
+		: QObject(parent), m_id(userId), m_name(userName), m_surname(userSurname), m_role(role), m_password(password) {}
 
 	int getUserId() const;
-	string getUserName() const;
-	void setUserName(string name);
-	string getUserSurname() const;
-	void setUserSurname(string surname);
-	string getRole() const;
-	void setRole(string role);
-	string getPassword() const;
-	void setPassword(string password);
+	QString getUserName() const;
+	void setUserName(QString name);
+	QString getUserSurname() const;
+	void setUserSurname(QString surname);
+	QString getRole() const;
+	void setRole(QString role);
+	QString getPassword() const;
+	void setPassword(QString password);
+	QString getInitials() const;
+	Account* getAccount() const;
+	void setAccount(Account* account);
+	Card* getCard() const;
+	void setCard(Card* card);
+
+signals:
+	void userDataChanged();
+	void accountChanged();
+	void cardChanged();
 };
 

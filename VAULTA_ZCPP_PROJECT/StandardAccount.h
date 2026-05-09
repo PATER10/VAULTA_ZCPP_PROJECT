@@ -6,7 +6,7 @@ class StandardAccount :
     public Account
 {
 public:
-    StandardAccount(int userId, string accountNumber, double balance, string currency, string accountType);
+    StandardAccount(int userId, QString accountNumber, double balance, QString currency, QString accountType);
     static string generateAccountNumber(int id);
 };
 

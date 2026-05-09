@@ -6,12 +6,13 @@
 #include <QDebug>
 #include <string>
 #include "User.h"
+#include "Account.h"
 
 class AuthManager : public QObject {
 	Q_OBJECT
+	Q_PROPERTY(User* currentUser READ currentUser NOTIFY userChanged)
 public:
-	std::string generateCardNumber();
-	std::string generateAccountNumber(int id);
+	User* currentUser() const;
 
 	explicit AuthManager(QObject* parent = nullptr);
 	~AuthManager();
@@ -27,6 +28,10 @@ public:
 
 private: 
 	int m_currentUserId = -1;
-	User* m_currentUser;
+	User* m_currentUser = nullptr;
+	Account* m_currentAccount = nullptr;
+	Card* m_currentCard = nullptr;
 
+signals:
+	void userChanged();
 };

@@ -114,12 +114,6 @@
     <ClInclude Include="openbsd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="User.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Account.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StandardAccount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -127,9 +121,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Transaction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Card.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -147,6 +138,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="LanguageManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="User.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Account.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Card.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

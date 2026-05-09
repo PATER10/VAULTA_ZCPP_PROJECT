@@ -4,9 +4,6 @@ import QtQuick.Controls.Basic 6.10
 Item {
     id: transactionsViewRoot
     anchors.fill: parent
-    
-    property var allTransactions: []
-    property string accountCurrency: "PLN"
             
     property int contentPadding: 30
 

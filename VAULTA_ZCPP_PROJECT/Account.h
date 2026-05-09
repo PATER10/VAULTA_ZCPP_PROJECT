@@ -1,27 +1,36 @@
 #pragma once
 #include <string>
+#include <QString>
+#include <QObject>
 
 using namespace std;
 
-class Account
+class Account : public QObject
 {
+	Q_OBJECT
+	Q_PROPERTY(double balance READ getBalance NOTIFY balanceChanged)
+	Q_PROPERTY(QString currency READ getCurrency CONSTANT)
+	Q_PROPERTY(QString accountNumber READ getAccountNumber CONSTANT)
 protected:
 	int m_uId, m_id;
-	string m_accountNumber;
+	QString m_accountNumber;
 	double m_balance;
-	string m_currency;
-	string m_accountType;
+	QString m_currency;
+	QString m_accountType;
 
 public:
-	Account(int userId, string accountNumber, double balance, string currency, string accountType);
+	explicit Account(QObject *parent = nullptr) : QObject(parent) {}
+	Account(int userId, QString accountNumber, double balance, QString currency, QString accountType);
 	virtual ~Account() {};
 	int getUId() const;
 	int getId() const;
-	string getAccountNumber();
-	void setAccountNumber(string accountNumber);
+	QString getAccountNumber();
+	void setAccountNumber(QString accountNumber);
 	double getBalance() const;
 	void setBalance(double balance);
-	string getCurrency() const;
-	string getAccountType() const;
+	QString getCurrency() const;
+	QString getAccountType() const;
+signals:
+	void balanceChanged();
 };
 

@@ -1,7 +1,7 @@
 #include "Account.h"
 
 
-Account::Account(int userId, string accountNumber, double balance, string currency, string accountType)
+Account::Account(int userId, QString accountNumber, double balance, QString currency, QString accountType)
     : m_uId(userId), m_accountNumber(accountNumber), m_balance(balance), m_currency(currency), m_accountType(accountType) {}
 
 int Account::getUId() const
@@ -14,12 +14,12 @@ int Account::getId() const
     return m_id;
 }
 
-string Account::getAccountNumber()
+QString Account::getAccountNumber()
 {
     return m_accountNumber;
 }
 
-void Account::setAccountNumber(string accountNumber)
+void Account::setAccountNumber(QString accountNumber)
 {
     m_accountNumber = accountNumber;
 }
@@ -34,12 +34,12 @@ void Account::setBalance(double balance)
     m_balance = balance;
 }
 
-string Account::getCurrency() const
+QString Account::getCurrency() const
 {
     return m_currency;
 }
 
-string Account::getAccountType() const
+QString Account::getAccountType() const
 {
     return m_accountType;
 }

@@ -21,6 +21,11 @@ AuthManager::~AuthManager()
 	if (m_currentUser) delete m_currentUser;
 }
 
+User* AuthManager::currentUser() const
+{
+	return m_currentUser;
+}
+
 //register new user account
 Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname, QString password, QString pin)
 {
@@ -119,26 +124,58 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 	QString qSurname = query.value(1).toString();
 	QString qPass = query.value(2).toString();
 	QString qRole = query.value(3).toString();
-	QString qInitials = qName.left(1) + qSurname.left(1);
 
 	if (bcrypt::validatePassword(password.toStdString(), qPass.toStdString())) {
 		m_currentUserId = login;
-		result["success"]=true;
-		result["name"] = qName;
-		result["surname"] = qSurname;
-		result["initials"] = qInitials;
-
+		
 		if (m_currentUser) {
 			delete m_currentUser;
 		}
 
-		m_currentUser = new User(
-			login,
-			qName.toStdString(),
-			qSurname.toStdString(),
-			qRole.toStdString(),
-			qPass.toStdString()
-		);
+		m_currentUser = new User(login,qName,qSurname,qRole,qPass);
+		emit userChanged();
+
+		query.prepare("SELECT id,account_number,balance,currency,account_type FROM account WHERE user_id= :uid");
+		query.bindValue(":uid", m_currentUserId);
+
+		if (!query.exec() || !query.next()) {
+			qDebug() << query.lastError();
+			qDebug() << "ACCOUNT QUERY ERROR!!!";
+		}
+
+		int qAccountId= query.value(0).toInt();
+		QString qAccNumber = query.value(1).toString();
+		double qBalance = query.value(2).toDouble();
+		QString qCurrency = query.value(3).toString();
+		QString qAccType = query.value(4).toString();
+
+		if(m_currentAccount) delete m_currentAccount;
+
+		m_currentAccount = new StandardAccount(m_currentUserId, qAccNumber, qBalance, qCurrency, qAccType);
+
+		m_currentUser->setAccount(m_currentAccount);
+
+
+		query.prepare("SELECT account_id,card_number,pin,expiry_date FROM card WHERE account_id= :accId");
+		query.bindValue(":accId", qAccountId);
+
+		if (!query.exec() || !query.next()) {
+			qDebug() << query.lastError();
+			qDebug() << "CARD QUERY ERROR!!!";
+		}
+
+		int qAccId = query.value(0).toInt();
+		QString qCardNumber = query.value(1).toString();
+		QString qPin = query.value(2).toString();
+		QString qExpiryDate = query.value(3).toDate().toString();
+
+		if (m_currentCard) delete m_currentCard;
+
+		m_currentCard = new Card(qAccId, qCardNumber, qPin, qExpiryDate);
+
+		m_currentUser->setCard(m_currentCard);
+
+		result["success"] = true;
 	}
 
 	return result;

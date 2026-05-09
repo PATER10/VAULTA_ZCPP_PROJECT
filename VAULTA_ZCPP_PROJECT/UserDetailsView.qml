@@ -5,11 +5,6 @@ Item {
     id: userDetailsViewRoot
     anchors.fill: parent
     
-    property string fullName: qsTr("Name Surname")
-    property int userId: 0
-    property string accountNumber: "----"
-    property string cardNumber: "----"
-    
     property int contentPadding: 30
 
     component DetailRow : Column {
@@ -97,22 +92,22 @@ Item {
             
             DetailRow {
                 labelText: qsTr("User ID (Login)")
-                valueText: userDetailsViewRoot.userId.toString()
+                valueText: appController.auth.currentUser.userId.toString()
             }
             
             DetailRow {
                 labelText: qsTr("Name and surname")
-                valueText: userDetailsViewRoot.fullName
+                valueText: appController.auth.currentUser.name + " " +appController.auth.currentUser.surname
             }
             
             DetailRow {
                 labelText: qsTr("Account Number")
-                valueText: userDetailsViewRoot.accountNumber
+                valueText: appController.auth.currentUser.account.accountNumber
             }
             
             DetailRow {
                 labelText: qsTr("Card Number")
-                valueText: userDetailsViewRoot.cardNumber
+                valueText: appController.auth.currentUser.card.cardNumber
             }
         }
         

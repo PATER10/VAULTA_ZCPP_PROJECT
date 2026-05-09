@@ -3,7 +3,7 @@
 class CurrencyAccount :
     public Account
 {
-    CurrencyAccount(int userId, string accountNumber, double balance, string currency, string accountType);
+    CurrencyAccount(int userId, QString accountNumber, double balance, QString currency, QString accountType);
     string generateAccountNumber(int id, string Currency);
 };
 

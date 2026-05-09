@@ -1,5 +1,11 @@
 #include "Card.h"
 #include <random>
+#include "AuthManager.h"
+
+Card::Card(int accId, QString cardNumber, QString pin, QString expiryDate)
+    : m_accId(accId), m_cardNumber(cardNumber), m_pin(pin), m_expiryDate(expiryDate)
+{
+}
 
 int Card::getCardId() const
 {
@@ -11,32 +17,32 @@ int Card::getAccId() const
     return m_accId;
 }
 
-string Card::getCardNumber() const
+QString Card::getCardNumber() const
 {
     return m_cardNumber;
 }
 
-void Card::setCardNumber(string cardNumber)
+void Card::setCardNumber(QString cardNumber)
 {
     m_cardNumber = cardNumber;
 }
 
-string Card::getPin() const
+QString Card::getPin() const
 {
     return m_pin;
 }
 
-void Card::setPin(string Pin)
+void Card::setPin(QString Pin)
 {
     m_pin = Pin;
 }
 
-string Card::getExpiryDate() const
+QString Card::getExpiryDate() const
 {
     return m_expiryDate;
 }
 
-void Card::setExpiryDate(string expiryDate)
+void Card::setExpiryDate(QString expiryDate)
 {
     m_expiryDate = expiryDate;
 }
