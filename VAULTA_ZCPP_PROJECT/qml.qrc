@@ -13,5 +13,9 @@
         <file>Translations/vaulta_pl.qm</file>
         <file>images/en_flag.svg</file>
         <file>images/pl_flag.svg</file>
+        <file>ATM.qml</file>
+        <file>AtmSelectionScreen.qml</file>
+        <file>DepositScreen.qml</file>
+        <file>WithdrawScreen.qml</file>
     </qresource>
 </RCC>

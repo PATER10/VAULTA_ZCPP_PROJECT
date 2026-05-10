@@ -14,4 +14,6 @@ public:
 	explicit BankManager(QObject* parent = nullptr);
 	Q_INVOKABLE void updateUserTransactions(bool limitToFive);
 	void setAuth(AuthManager* auth) { m_auth = auth; }
+
+    bool processTransaction(QString type, double amount); 
 };

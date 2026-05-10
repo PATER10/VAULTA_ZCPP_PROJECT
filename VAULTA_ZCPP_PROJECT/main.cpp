@@ -8,6 +8,8 @@
 #include "DatabaseManager.h"
 #include "AppController.h"
 #include "LanguageManager.h"
+#include "Transaction.h"
+#include "ATM.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +32,9 @@ int main(int argc, char *argv[])
     AppController appController;
 
     QQmlApplicationEngine engine;
+
+    qmlRegisterType<ATM>("Bank", 1, 0, "ATM");
+    qmlRegisterType<Transaction>("Bank", 1, 0, "Transaction");
 
     engine.rootContext()->setContextProperty("appController", &appController);
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/vaulta_zcpp_project/main.qml")));

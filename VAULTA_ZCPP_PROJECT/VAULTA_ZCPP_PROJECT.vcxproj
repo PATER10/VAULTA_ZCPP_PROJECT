@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
     <ClCompile Include="AppController.cpp" />
+    <ClCompile Include="ATM.cpp" />
     <ClCompile Include="AuthManager.cpp" />
     <ClCompile Include="BankManager.cpp" />
     <ClCompile Include="bcrypt.cpp" />
@@ -119,6 +120,9 @@
     <ClCompile Include="Transaction.cpp" />
     <ClCompile Include="User.cpp" />
     <None Include="AccountsView.qml" />
+    <None Include="ATM.qml" />
+    <None Include="AtmSelectionScreen.qml" />
+    <None Include="DepositScreen.qml" />
     <None Include="HomeView.qml" />
     <None Include="LoginScreen.qml" />
     <None Include="MainMenu.qml" />
@@ -127,11 +131,13 @@
     <None Include="TransfersView.qml" />
     <None Include="UserDashboard.qml" />
     <None Include="UserDetailsView.qml" />
+    <None Include="WithdrawScreen.qml" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Account.h" />
+    <QtMoc Include="ATM.h" />
     <ClInclude Include="bcrypt.h" />
     <QtMoc Include="Card.h" />
     <ClInclude Include="CurrencyAccount.h" />
