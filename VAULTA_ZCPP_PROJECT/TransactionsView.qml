@@ -77,13 +77,13 @@ Item {
                     Rectangle {
                         id: iconBg
                         width: 36; height: 36; radius: 18
-                        color: (modelData.type === "TRANSFER IN") ? "#e8f5e9" : "#ffebee"
+                        color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#e8f5e9" : "#ffebee"
                         anchors.left: parent.left; anchors.leftMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
-                            text: (modelData.type === "TRANSFER IN") ? "+" : "-"
+                            text: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "+" : "-"
                             font.pixelSize: 20; font.bold: true
-                            color: (modelData.type === "TRANSFER IN") ? "#2ecc71" : "#e74c3c"
+                            color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#2ecc71" : "#e74c3c"
                             anchors.centerIn: parent; anchors.verticalCenterOffset: -1
                         }
                     }
@@ -96,8 +96,8 @@ Item {
                             text: {
                                 if (modelData.type === "TRANSFER OUT") return qsTr("Outgoing Transfer")
                                 if (modelData.type === "TRANSFER IN") return qsTr("Incoming Transfer")
-                                if (modelData.type === "WITHDRAWAL") return qsTr("Withdrawal")
-                                if (modelData.type === "DEPOSIT") return qsTr("Deposit")
+                                if (modelData.type === "WITHDRAWAL") return qsTr("ATM")
+                                if (modelData.type === "DEPOSIT") return qsTr("ATM")
                                 return qsTr("Transaction")
                             }
                             font.bold: true; font.pixelSize: 14; color: "black"
@@ -116,9 +116,9 @@ Item {
                     }
 
                     Text {
-                        text: modelData.amount + " " + appController.auth.currentUser.account.currency
+                        text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
                         font.bold: true; font.pixelSize: 14
-                        color: (modelData.type === "TRANSFER IN") ? "#2ecc71" : "#e74c3c"
+                        color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#2ecc71" : "#e74c3c"
                         anchors.right: parent.right; anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                     }

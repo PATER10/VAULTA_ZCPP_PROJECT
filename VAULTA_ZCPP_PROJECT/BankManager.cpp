@@ -1,5 +1,6 @@
 #include "BankManager.h"
 #include <QDate>
+#include <QTimeZone>
 #include <QDebug>
 
 BankManager::BankManager(QObject* parent)
@@ -38,7 +39,9 @@ void BankManager::updateUserTransactions(bool limitToFive)
 			t->setAccountNumber(query.value(1).toString());
 			t->setAmount(query.value(2).toDouble());
 			t->setTargetAccount(query.value(3).toString());
-			t->setTimestamp(query.value(4).toDateTime().toString("dd.MM.yyyy HH:mm"));
+            QDateTime timeFromDb = query.value(4).toDateTime();
+            timeFromDb.setTimeZone(QTimeZone::utc());
+            t->setTimestamp(timeFromDb.toLocalTime().toString("dd.MM.yyyy HH:mm"));
 			list.append(QVariant::fromValue(t));
 		}
 		user->setTransactions(list);
@@ -46,6 +49,58 @@ void BankManager::updateUserTransactions(bool limitToFive)
 	else {
 		qDebug() << "SQL QUERY ERROR: " << query.lastError().text();
 	}
+}
+
+bool BankManager::processTransaction(QString type, double amount)
+{
+    User* user = m_auth->currentUser();
+    if (!user || !user->getAccount()) return false;
+
+    QString accNum = user->getAccount()->getAccountNumber();
+    double currentBalance = user->getAccount()->getBalance();
+    double newBalance = currentBalance;
+
+    if (type == "DEPOSIT" || type == "TRANSFER IN") {
+        newBalance += amount;
+    }
+    else if (type == "WITHDRAWAL" || type == "TRANSFER OUT") {
+        if (currentBalance < amount) return false;
+        newBalance -= amount;
+    }
+    else {
+        return false;
+    }
+
+    QSqlDatabase db = QSqlDatabase::database();
+    db.transaction();
+
+    QSqlQuery updateQuery(db);
+
+    QString updateSql = QString("UPDATE account SET balance = :nBalance WHERE account_number = :accNum");
+    updateQuery.prepare(updateSql);
+    updateQuery.bindValue(":nBalance", newBalance);
+    updateQuery.bindValue(":accNum", accNum);
+
+    QSqlQuery insertQuery(db);
+    insertQuery.prepare("INSERT INTO transaction (type, accountnumber, amount, timestamp) "
+        "VALUES (:type, :accNum, :amount, CURRENT_TIMESTAMP)");
+    insertQuery.bindValue(":type", type);
+    insertQuery.bindValue(":accNum", accNum);
+    insertQuery.bindValue(":amount", amount);
+
+    if (updateQuery.exec() && insertQuery.exec()) {
+        db.commit();
+
+        user->getAccount()->setBalance(newBalance);
+        updateUserTransactions(true);
+        return true;
+    }
+    else {
+        db.rollback();
+        qDebug() << "ERROR PROCESING TRANSACTION:" << updateQuery.lastError().text();
+        qDebug() << "ERROR INSERT DATA" << insertQuery.lastError().text();
+        return false;
+    }
 }
 
 

@@ -74,6 +74,9 @@
     <ClCompile Include="Card.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ATM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MainMenu.qml">
@@ -101,6 +104,18 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="UserDetailsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="AtmSelectionScreen.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="ATM.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="DepositScreen.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="WithdrawScreen.qml">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
@@ -147,6 +162,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Transaction.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ATM.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

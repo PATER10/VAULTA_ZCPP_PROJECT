@@ -25,6 +25,8 @@ public:
 	Q_INVOKABLE void logout();
 	Q_INVOKABLE int currentUserId() const { return m_currentUserId; }
 	Q_INVOKABLE bool isLoggedIn() const { return m_currentUserId != -1; }
+	Q_INVOKABLE bool loginCard(QString cardNumber, QString pin);
+	Q_INVOKABLE bool loadUserData(int login);
 
 private: 
 	int m_currentUserId = -1;
