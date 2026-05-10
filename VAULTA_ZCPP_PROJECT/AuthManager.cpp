@@ -1,4 +1,6 @@
 #include "AuthManager.h"
+#include "StandardAccount.h"
+#include "Card.h"
 #include <string>
 #include <iostream>
 #include <random>
@@ -9,26 +11,19 @@
 
 using namespace std;
 
-//generate a unique card number
-string AuthManager::generateCardNumber()
-{
-	random_device rd;
-	mt19937 gen(rd());
-	uniform_int_distribution<long long> dis(10000000LL, 99999999LL);
-	long long number = dis(gen);
-	return to_string(number);
-}
-
-//generate account number
-string AuthManager::generateAccountNumber(int id)
-{
-	ostringstream oss;
-	oss << "PL" << setw(8) << setfill('0') << id;
-	return oss.str();
-}
-
 AuthManager::AuthManager(QObject* parent)
 {
+	m_currentUser = nullptr;
+}
+
+AuthManager::~AuthManager()
+{
+	if (m_currentUser) delete m_currentUser;
+}
+
+User* AuthManager::currentUser() const
+{
+	return m_currentUser;
 }
 
 //register new user account
@@ -51,7 +46,7 @@ Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname,
 	hashedPassword = bcrypt::generateHash(password.toStdString(), 5);
 	hashedPin = bcrypt::generateHash(pin.toStdString(), 4);
 
-	query.prepare("INSERT INTO users (password, name, surname, role) VALUES (:pass, :name, :surname, :role) RETURNING id");
+	query.prepare("INSERT INTO \"user\" (password, name, surname, role) VALUES(:pass, :name, :surname, :role) RETURNING id");
 
 	query.bindValue(":pass", QString::fromStdString(hashedPassword));
 	query.bindValue(":name", name);
@@ -65,10 +60,10 @@ Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname,
 
 	userId = query.value(0).toInt();
 
-	cardNumber = generateCardNumber();
-	accountNumber = generateAccountNumber(userId);
+	cardNumber = Card::generateCardNumber();
+	accountNumber = StandardAccount::generateAccountNumber(userId);
 
-	query.prepare("INSERT INTO accounts (user_id, account_number, balance, currency, account_type) VALUES (:uid, :accNo, :bal, :curr, :type) RETURNING id");
+	query.prepare("INSERT INTO account (user_id, account_number, balance, currency, account_type) VALUES (:uid, :accNo, :bal, :curr, :type) RETURNING id");
 
 	query.bindValue(":uid",userId);
 	query.bindValue(":accNo", QString::fromStdString(accountNumber));
@@ -83,7 +78,7 @@ Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname,
 
 	int accId = query.value(0).toInt();
 
-	query.prepare("INSERT INTO cards (account_id, card_number, pin, expiry_date) VALUES (:accId, :cardNo, :pin, :expiry)");
+	query.prepare("INSERT INTO card (account_id, card_number, pin, expiry_date) VALUES (:accId, :cardNo, :pin, :expiry)");
 
 	query.bindValue(":accId", accId);
 	query.bindValue(":cardNo", QString::fromStdString(cardNumber));
@@ -117,7 +112,7 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 	QSqlDatabase db = QSqlDatabase::database();
 	QSqlQuery query;
 
-	query.prepare("SELECT name, surname, password, role FROM users WHERE id= :login");
+	query.prepare("SELECT name, surname, password, role FROM \"user\" WHERE id= :login");
 	query.bindValue(":login", login);
 
 	if (!query.exec() || !query.next()) {
@@ -129,17 +124,58 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 	QString qSurname = query.value(1).toString();
 	QString qPass = query.value(2).toString();
 	QString qRole = query.value(3).toString();
-	QString qInitials = qName.left(1) + qSurname.left(1);
-
-	qDebug() << qName << " " << qSurname << " " << qPass << " " << qRole << " " << qInitials;
 
 	if (bcrypt::validatePassword(password.toStdString(), qPass.toStdString())) {
 		m_currentUserId = login;
-		result["success"]=true;
-		result["name"] = qName;
-		result["surname"] = qSurname;
-		result["role"] = qRole;
-		result["initials"] = qInitials;
+		
+		if (m_currentUser) {
+			delete m_currentUser;
+		}
+
+		m_currentUser = new User(login,qName,qSurname,qRole,qPass);
+		emit userChanged();
+
+		query.prepare("SELECT id,account_number,balance,currency,account_type FROM account WHERE user_id= :uid");
+		query.bindValue(":uid", m_currentUserId);
+
+		if (!query.exec() || !query.next()) {
+			qDebug() << query.lastError();
+			qDebug() << "ACCOUNT QUERY ERROR!!!";
+		}
+
+		int qAccountId= query.value(0).toInt();
+		QString qAccNumber = query.value(1).toString();
+		double qBalance = query.value(2).toDouble();
+		QString qCurrency = query.value(3).toString();
+		QString qAccType = query.value(4).toString();
+
+		if(m_currentAccount) delete m_currentAccount;
+
+		m_currentAccount = new StandardAccount(m_currentUserId, qAccNumber, qBalance, qCurrency, qAccType);
+
+		m_currentUser->setAccount(m_currentAccount);
+
+
+		query.prepare("SELECT account_id,card_number,pin,expiry_date FROM card WHERE account_id= :accId");
+		query.bindValue(":accId", qAccountId);
+
+		if (!query.exec() || !query.next()) {
+			qDebug() << query.lastError();
+			qDebug() << "CARD QUERY ERROR!!!";
+		}
+
+		int qAccId = query.value(0).toInt();
+		QString qCardNumber = query.value(1).toString();
+		QString qPin = query.value(2).toString();
+		QString qExpiryDate = query.value(3).toDate().toString();
+
+		if (m_currentCard) delete m_currentCard;
+
+		m_currentCard = new Card(qAccId, qCardNumber, qPin, qExpiryDate);
+
+		m_currentUser->setCard(m_currentCard);
+
+		result["success"] = true;
 	}
 
 	return result;
@@ -147,5 +183,8 @@ Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 
 Q_INVOKABLE void AuthManager::logout(){
 	m_currentUserId = -1;
-	qDebug() << "User logged out.";
+	if (m_currentUser) {
+		delete m_currentUser;
+		m_currentUser = nullptr;
+	}
 }

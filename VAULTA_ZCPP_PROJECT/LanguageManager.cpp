@@ -44,6 +44,5 @@ void LanguageManager::loadSavedLanguage()
 	QSettings settings("PATER10", "VaultaApp");
 	QString savedLang = settings.value("language", "en").toString();
 
-	qDebug() << "Wczytano z rejestru/pliku: " << savedLang;
 	setLanguage(savedLang);
 }

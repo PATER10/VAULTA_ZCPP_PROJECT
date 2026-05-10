@@ -6,18 +6,7 @@ Rectangle {
     anchors.fill: parent
     color: "#f5f5f5"
 
-    property int userId: 0
-    property string userInitials: "" 
-    property string userName: ""
-    property string userSurname: ""
     property string activeTab: "home"
-
-    property string accountBalance: "0.00"
-    property string accountNumber: "----"
-    property string accountCurrency: "PLN"
-    property string cardNumber: "----"
-
-    property var recentTransactions: []
     
     Component.onCompleted: {
         if (Window.window) {
@@ -48,7 +37,7 @@ Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
                         Behavior on width{ NumberAnimation { duration: 200 } }
                         Text{
-                            text: userDashboardRoot.userInitials
+                            text: appController.auth.currentUser.initials
                             color: "white"
                             font.pixelSize: 18
                             font.bold: true
@@ -72,7 +61,7 @@ Rectangle {
                     spacing: 2
 
                     Text{
-                        text: userDashboardRoot.userName + " " + userDashboardRoot.userSurname
+                        text: appController.auth.currentUser.name + " " + appController.auth.currentUser.surname
                         width: parent.width
                         horizontalAlignment: Text.AlignHCenter
                         font.bold: true
@@ -271,48 +260,6 @@ Rectangle {
                     if (userDashboardRoot.activeTab === "transfers") return "TransfersView.qml"
                     if (userDashboardRoot.activeTab === "userDetails") return "UserDetailsView.qml"
                     return ""
-                }
-                onLoaded: {
-                    if (userDashboardRoot.activeTab === "home" && item) {
-                        item.accountBalance = Qt.binding(function() { return userDashboardRoot.accountBalance })
-                        item.accountNumber = Qt.binding(function() { return userDashboardRoot.accountNumber })
-                        item.accountCurrency = Qt.binding(function() { return userDashboardRoot.accountCurrency })
-                        item.recentTransactions = Qt.binding(function() { return userDashboardRoot.recentTransactions })
-                    }
-                    if (userDashboardRoot.activeTab === "transactions" && item) {
-                        item.allTransactions = Qt.binding(function() { return userDashboardRoot.recentTransactions })
-                        item.accountCurrency = Qt.binding(function() { return userDashboardRoot.accountCurrency })
-                    }
-                    if (userDashboardRoot.activeTab === "accounts" && item) {
-                        item.accountBalance = Qt.binding(function() { return userDashboardRoot.accountBalance })
-                        item.accountNumber = Qt.binding(function() { return userDashboardRoot.accountNumber })
-                        item.accountCurrency = Qt.binding(function() { return userDashboardRoot.accountCurrency })
-                    }
-                    if (userDashboardRoot.activeTab === "transfers" && item) {
-                        item.accountBalance = Qt.binding(function() { return userDashboardRoot.accountBalance })
-                        item.accountNumber = Qt.binding(function() { return userDashboardRoot.accountNumber })
-                        item.accountCurrency = Qt.binding(function() { return userDashboardRoot.accountCurrency })
-
-                        item.transferSuccessful.connect(function(newBalance){
-                            var freshData = bankSystem.getUserData(userDashboardRoot.userId);
-
-                            userDashboardRoot.accountBalance = freshData.balance;
-                            userDashboardRoot.recentTransactions = freshData.transactions;
-                        })
-                    }
-                    if (userDashboardRoot.activeTab === "userDetails" && item) {
-                        item.userId = userDashboardRoot.userId
-                        item.fullName = userDashboardRoot.userName + " " + userDashboardRoot.userSurname
-                        item.accountNumber = Qt.binding(function() { return userDashboardRoot.accountNumber })
-                        item.cardNumber = Qt.binding(function() { return userDashboardRoot.cardNumber })
-
-                        item.transferSuccessful.connect(function(newBalance){
-                            var freshData = bankSystem.getUserData(userDashboardRoot.userId);
-
-                            userDashboardRoot.accountBalance = freshData.balance;
-                            userDashboardRoot.recentTransactions = freshData.transactions;
-                        })
-                    }
                 }
             }
         }

@@ -56,6 +56,24 @@
     <ClCompile Include="LanguageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Account.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardAccount.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CurrencyAccount.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MainMenu.qml">
@@ -96,6 +114,12 @@
     <ClInclude Include="openbsd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StandardAccount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CurrencyAccount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="DatabaseManager.h">
@@ -111,6 +135,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="LanguageManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="User.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Account.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Card.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Transaction.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

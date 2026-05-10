@@ -26,7 +26,7 @@ Rectangle {
                 id: flagImg
                 anchors.fill: parent
                 anchors.margins: 1
-                source: L.currentLanguage === "pl" ? "./images/en_flag.svg" : "./images/pl_flag.svg"
+                source: appController.L.currentLanguage === "pl" ? "./images/en_flag.svg" : "./images/pl_flag.svg"
                 fillMode: Image.PreserveAspectCrop
 
                 smooth: true
@@ -38,10 +38,10 @@ Rectangle {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                if(L.currentLanguage === "pl"){
-                    L.setLanguage("en")
+                if(appController.L.currentLanguage === "pl"){
+                    appController.L.setLanguage("en")
                 }else{
-                    L.setLanguage("pl")
+                   appController.L.setLanguage("pl")
                 }
             }
             onPressed: flagContainer.opacity = 0.7
@@ -55,14 +55,14 @@ Rectangle {
         spacing: 35
         width: 300
         Text{
-            text: qsTr("WELCOME TO VAULTA") + L.updateTr
+            text: qsTr("WELCOME TO VAULTA") + appController.L.updateTr
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 24
             font.bold: true
             color: "#281C9D"
         }
         Text{
-            text: qsTr("Choose an option") + L.updateTr
+            text: qsTr("Choose an option") + appController.L.updateTr
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 16
             color: "#343434"
@@ -77,7 +77,7 @@ Rectangle {
                 NumberAnimation { duration: 200 } 
             }
             Text{
-                text: qsTr("ATM") + L.updateTr
+                text: qsTr("ATM") + appController.L.updateTr
                 color: "white"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
@@ -108,7 +108,7 @@ Rectangle {
                 NumberAnimation { duration: 200 } 
             }
             Text{
-                text: qsTr("Vaulta app") + L.updateTr
+                text: qsTr("Vaulta app") + appController.L.updateTr
                 color: "white"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter

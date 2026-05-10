@@ -4,12 +4,7 @@ import QtQuick.Controls.Basic 6.10
 Item{
     id: accountViewRoot
     anchors.fill: parent
-    
-    property string accountBalance: "0.00"
-    property string accountNumber: "----"
-    property string accountCurrency: "PLN"
-    property var recentTransactions: []
-            
+             
     property int contentPadding: 30
 
     Column {
@@ -56,19 +51,19 @@ Item{
                         height: 40
                         radius: 20
                         color: "#f0f0f5"
-                        Text { text: accountViewRoot.accountCurrency; anchors.centerIn: parent; font.bold: true; color: "#281c9d"; font.pixelSize: 10 }
+                        Text { text: appController.auth.currentUser.account.currency; anchors.centerIn: parent; font.bold: true; color: "#281c9d"; font.pixelSize: 10 }
                     }
                 }
 
                 Text {
-                    text: Number(accountViewRoot.accountBalance).toFixed(2) + " " + accountViewRoot.accountCurrency
+                    text: Number(appController.auth.currentUser.account.balance).toFixed(2) + " " + appController.auth.currentUser.account.currency
                     font.pixelSize: 20
                     font.bold: true
                     color: "#281c9d"
                 }
                         
                 Text {
-                    text: accountViewRoot.accountNumber
+                    text: appController.auth.currentUser.account.accountNumber
                     font.pixelSize: 14
                     color: "#888"
                 }

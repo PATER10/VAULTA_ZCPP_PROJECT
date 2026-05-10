@@ -134,29 +134,14 @@ Rectangle {
                 if(isNaN(uid)) uid = 0;
 
                 var result = appController.auth.loginUser(uid, passwordInput.text);
-                    
-                if(result.success === true) {
-                           
-                    var dataResult = appController.bankManager.getAccountData();
-                    //var transactionsResult = appController.bankManager.getTransactions(uid);
+      
+                if(result.success === true) {   
                         
-                    loginScreenRoot.StackView.view.push("UserDashboard.qml", {
-                    "userId": uid,
-                    "userName": result.name, 
-                    "userSurname": result.surname,
-                    "userInitials": result.initials,
-                    "accountBalance": dataResult.balance,
-                    "accountNumber": dataResult.accNumber,
-                    "accountCurrency": dataResult.currency,
-                    //"recentTransactions": dataResult.transactions,
-                    "cardNumber": dataResult.cardNumber
-                    })
+                    loginScreenRoot.StackView.view.push("UserDashboard.qml")
 
-                    
                     userIdInput.text = ""
                     passwordInput.text = ""
                 } else {
-                    console.log("Błąd logowania");
                     signInErr.visible = true
                     userIdInput.text = ""
                     passwordInput.text = ""

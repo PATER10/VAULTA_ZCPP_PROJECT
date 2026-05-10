@@ -1,6 +1,7 @@
 import QtQuick 6.10
 import QtQuick.Window 6.10
-import QtQuick.Controls 6.10
+import QtQuick.Controls.Basic 6.10
+import QtQuick.Effects 6.10
 
 
 Window {

@@ -1,7 +1,4 @@
 #pragma once
-#ifndef LANGUAGEMANAGER_H
-#define LANGUAGEMANAGER_H
-
 #include <QObject>
 #include<QTranslator>
 
@@ -26,5 +23,3 @@ private:
 	QTranslator m_translator;
 	QString m_currentLang;
 };
-
-#endif
