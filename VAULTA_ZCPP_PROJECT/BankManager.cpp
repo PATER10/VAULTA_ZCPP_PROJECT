@@ -7,61 +7,45 @@ BankManager::BankManager(QObject* parent)
 
 }
 
-Q_INVOKABLE QVariantMap BankManager::getAccountData()
+void BankManager::updateUserTransactions(bool limitToFive)
 {
-	QVariantMap result;
-	result["success"] = false;
-
-	QSqlDatabase db = QSqlDatabase::database();
-	QSqlQuery query;
-
-	int currentId = m_auth->currentUserId();
-
-	query.prepare("SELECT a.account_number, a.balance, a.currency, a.account_type, c.card_number " 
-		"FROM account a LEFT JOIN card c ON a.id=c.account_id WHERE a.user_id = :uId");
-	query.bindValue(":uId", currentId);
-
-	if (!query.exec() || !query.next()) {
-		qDebug() << query.lastError();
-		return result;
-	}
-
-	result["success"] = true;
-	result["accNumber"] = query.value(0).toString();
-	result["balance"] = query.value(1).toString();
-	result["currency"] = query.value(2).toString();
-	result["accType"] = query.value(3).toString();
-	result["cardNumber"] = query.value(4).toString();
-
-	return result;
-}
-
-Q_INVOKABLE QVariantList BankManager::getLatestTransactions()
-{
-	QVariantList list;
+	User* user = m_auth->currentUser();
+	if (!user || !user->getAccount()) return;
 
 	QSqlDatabase db = QSqlDatabase::database();
 	QSqlQuery query;
 
 	int currentUserId = m_auth->currentUserId();
 
-	query.prepare("SELECT title, amount, date, type,  "
-		"FROM transaction WHERE sender_id = :id OR receiver_id = :id "
-		"ORDER BY date DESC LIMIT 5");
-	query.bindValue(":id", currentUserId);
-
-	if (!query.exec()) {
-		while (query.next()) {
-			QVariantMap map;
-			map["title"] = query.value(0).toString();
-			map["amount"] = query.value(1).toDouble();
-			map["date"] = query.value(2).toDate().toString("dd.MM.yyyy");
-			map["type"] = query.value(3).toString();
-			list.append(map);
-		}
+	QString sqlQuery = "SELECT type,accountnumber,amount,targetaccount,timestamp "
+		"FROM transaction WHERE accountnumber = :accNum ";
+	
+	if (limitToFive) {
+		sqlQuery += "ORDER BY timestamp DESC LIMIT 5";
+	}
+	else {
+		sqlQuery += "ORDER BY timestamp DESC";
 	}
 
-	return list;
+	query.prepare(sqlQuery);
+	query.bindValue(":accNum", user->getAccount()->getAccountNumber());
+
+	if (query.exec()) {
+		QVariantList list;
+		while (query.next()) {
+			Transaction* t = new Transaction(user);
+			t->setType(query.value(0).toString());
+			t->setAccountNumber(query.value(1).toString());
+			t->setAmount(query.value(2).toDouble());
+			t->setTargetAccount(query.value(3).toString());
+			t->setTimestamp(query.value(4).toDateTime().toString("dd.MM.yyyy HH:mm"));
+			list.append(QVariant::fromValue(t));
+		}
+		user->setTransactions(list);
+	}
+	else {
+		qDebug() << "SQL QUERY ERROR: " << query.lastError().text();
+	}
 }
 
 

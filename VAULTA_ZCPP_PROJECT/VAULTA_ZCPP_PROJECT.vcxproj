@@ -136,7 +136,7 @@
     <QtMoc Include="Card.h" />
     <ClInclude Include="CurrencyAccount.h" />
     <ClInclude Include="StandardAccount.h" />
-    <ClInclude Include="Transaction.h" />
+    <QtMoc Include="Transaction.h" />
     <QtMoc Include="User.h" />
     <QtMoc Include="LanguageManager.h" />
     <ClInclude Include="node_blf.h" />

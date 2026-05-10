@@ -12,7 +12,6 @@ class BankManager : public QObject {
 	AuthManager* m_auth = nullptr;
 public:
 	explicit BankManager(QObject* parent = nullptr);
-	Q_INVOKABLE QVariantMap getAccountData();
-	Q_INVOKABLE QVariantList getLatestTransactions();
+	Q_INVOKABLE void updateUserTransactions(bool limitToFive);
 	void setAuth(AuthManager* auth) { m_auth = auth; }
 };

@@ -1,8 +1,11 @@
 #pragma once
 #include <string>
 #include <QObject>
+#include <QVariant>
+#include <QVariantList>
 #include "Account.h"
 #include "Card.h"
+#include "Transaction.h"
 
 using namespace std;
 
@@ -15,11 +18,13 @@ class User : public QObject
 	Q_PROPERTY(QString initials READ getInitials NOTIFY userDataChanged)
 	Q_PROPERTY(Account* account READ getAccount NOTIFY accountChanged)
 	Q_PROPERTY(Card* card READ getCard NOTIFY cardChanged)
+	Q_PROPERTY(QVariantList transactions READ getTransactions NOTIFY transactionsChanged)
 private:
 	int m_id;
 	QString m_name, m_surname, m_role, m_password;
 	Account* m_account = nullptr;
 	Card* m_card = nullptr;
+	QVariantList m_transactions;
 
 public:
 	explicit User(QObject *parent = nullptr) : QObject(parent) {}
@@ -41,10 +46,16 @@ public:
 	void setAccount(Account* account);
 	Card* getCard() const;
 	void setCard(Card* card);
+	QVariantList getTransactions() const;
+	void setTransactions(const QVariantList& transactions) {
+		m_transactions = transactions;
+		emit transactionsChanged();
+	}
 
 signals:
 	void userDataChanged();
 	void accountChanged();
 	void cardChanged();
+	void transactionsChanged();
 };
 

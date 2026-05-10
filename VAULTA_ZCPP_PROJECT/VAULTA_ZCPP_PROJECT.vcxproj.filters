@@ -120,9 +120,6 @@
     <ClInclude Include="CurrencyAccount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transaction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="DatabaseManager.h">
@@ -147,6 +144,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Card.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Transaction.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

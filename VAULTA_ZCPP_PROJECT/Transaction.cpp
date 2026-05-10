@@ -1,7 +1,7 @@
 #include "Transaction.h"
 #include <sstream>
 
-string Transaction::getCurrentTimestamp() {
+QString Transaction::getCurrentTimestamp() {
 	time_t now = time(0);
 	struct tm now_tm;
 	char buffer[80];
@@ -13,10 +13,15 @@ string Transaction::getCurrentTimestamp() {
 	return buffer;
 }
 
-Transaction::Transaction(int id, string type, string accountNumber, double amount, string targetAccount)
+Transaction::Transaction(int id, QString type, QString accountNumber, double amount, QString targetAccount)
 	:m_id(id), m_type(type), m_accountNumber(accountNumber), m_amount(amount), m_targetAccount(targetAccount)
 {
 	this->m_timestamp = getCurrentTimestamp();
+}
+
+Transaction::Transaction(int id, QString type, QString accountNumber, double amount, QString targetAccount, QString date)
+	:m_id(id), m_type(type), m_accountNumber(accountNumber), m_amount(amount), m_targetAccount(targetAccount), m_timestamp(date)
+{
 }
 
 int Transaction::getTransactionId() const
@@ -24,22 +29,22 @@ int Transaction::getTransactionId() const
 	return m_id;
 }
 
-string Transaction::getType() const
+QString Transaction::getType() const
 {
 	return m_type;
 }
 
-void Transaction::setType(string type)
+void Transaction::setType(QString type)
 {
 	m_type = type;
 }
 
-string Transaction::getAccountNumber() const
+QString Transaction::getAccountNumber() const
 {
 	return m_accountNumber;
 }
 
-void Transaction::setAccountNumber(string accountNumber) {
+void Transaction::setAccountNumber(QString accountNumber) {
 	m_accountNumber = accountNumber;
 }
 
@@ -53,17 +58,22 @@ void Transaction::setAmount(double amount)
 	m_amount = amount;
 }
 
-string Transaction::getTimestamp() const
+QString Transaction::getTimestamp() const
 {
 	return m_timestamp;
 }
 
-string Transaction::getTargetAccount() const
+void Transaction::setTimestamp(QString date)
+{
+	m_timestamp = date;
+}
+
+QString Transaction::getTargetAccount() const
 {
 	return m_targetAccount;
 }
 
-void Transaction::setTargetAccount(string targetAccount)
+void Transaction::setTargetAccount(QString targetAccount)
 {
 	m_targetAccount = targetAccount;
 }

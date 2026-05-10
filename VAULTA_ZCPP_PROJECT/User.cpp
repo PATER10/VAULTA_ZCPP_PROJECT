@@ -74,3 +74,8 @@ void User::setCard(Card* card)
 	m_card = card;
 	emit cardChanged();
 }
+
+QVariantList User::getTransactions() const
+{
+	return m_transactions;
+}

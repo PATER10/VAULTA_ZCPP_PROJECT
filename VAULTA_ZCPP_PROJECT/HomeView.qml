@@ -7,6 +7,10 @@ Item{
         
     property int contentPadding: 30
 
+    Component.onCompleted: {
+        appController.bankManager.updateUserTransactions(true)
+    }
+
     Column {
         id: headerContainer
         width: parent.width
@@ -93,7 +97,7 @@ Item{
         clip: true
         spacing: 15
                 
-        model: homeViewRoot.recentTransactions.slice(0,5)
+        model: appController.auth.currentUser.transactions
 
         delegate: Rectangle {
             width: parent.width - 80
@@ -123,13 +127,13 @@ Item{
                     Rectangle {
                         id: iconBg
                         width: 36; height: 36; radius: 18
-                        color: (modelData.type === "IN") ? "#e8f5e9" : "#ffebee"
+                        color: (modelData.type === "TRANSFER IN") ? "#e8f5e9" : "#ffebee"
                         anchors.left: parent.left; anchors.leftMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
-                            text: (modelData.type === "IN") ? "+" : "-"
+                            text: (modelData.type === "TRANSFER IN") ? "+" : "-"
                             font.pixelSize: 20; font.bold: true
-                            color: (modelData.type === "IN") ? "#2ecc71" : "#e74c3c"
+                            color: (modelData.type === "TRANSFER IN") ? "#2ecc71" : "#e74c3c"
                             anchors.centerIn: parent; anchors.verticalCenterOffset: -1
                         }
                     }
@@ -139,20 +143,32 @@ Item{
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 3
                         Text {
-                            text: modelData.title
+                            text: {
+                                if (modelData.type === "TRANSFER OUT") return qsTr("Outgoing Transfer")
+                                if (modelData.type === "TRANSFER IN") return qsTr("Incoming Transfer")
+                                if (modelData.type === "WITHDRAWAL") return qsTr("Withdrawal")
+                                if (modelData.type === "DEPOSIT") return qsTr("Deposit")
+                                return qsTr("Transaction")
+                            }
                             font.bold: true; font.pixelSize: 14; color: "black"
                         }
                         Text {
-                            text: modelData.description
+                            text: {
+                                if (modelData.type === "TRANSFER OUT") {return qsTr("to: ")+ modelData.targetAccount}
+                                if (modelData.type === "TRANSFER IN") {return qsTr("FROM: ")+ modelData.targetAccount}
+                                if (modelData.type === "WITHDRAWAL") return qsTr("Cash Withdrawal")
+                                if (modelData.type === "DEPOSIT") return qsTr("Cash Deposit")
+                                return qsTr("Transaction")
+                            }
                             font.pixelSize: 11; color: "#999999"
                             width: 160; elide: Text.ElideRight
                         }
                     }
 
                     Text {
-                        text: modelData.amount + " " + homeViewRoot.accountCurrency
+                        text: modelData.amount + " " + appController.auth.currentUser.account.currency
                         font.bold: true; font.pixelSize: 14
-                        color: (modelData.type === "IN") ? "#2ecc71" : "#e74c3c"
+                        color: (modelData.type === "TRANSFER IN") ? "#2ecc71" : "#e74c3c"
                         anchors.right: parent.right; anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                     }
