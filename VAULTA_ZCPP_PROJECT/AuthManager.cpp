@@ -1,6 +1,7 @@
 #include "AuthManager.h"
 #include "StandardAccount.h"
 #include "Card.h"
+#include "CurrencyAccount.h"
 #include <string>
 #include <iostream>
 #include <random>
@@ -175,28 +176,38 @@ Q_INVOKABLE bool AuthManager::loadUserData(int login)
 	query.prepare("SELECT id, account_number, balance, currency, account_type FROM account WHERE user_id= :uid");
 	query.bindValue(":uid", login);
 
-	if (query.exec() && query.next()) {
-		int qAccountId = query.value(0).toInt();
-		QString qAccNumber = query.value(1).toString();
-		double qBalance = query.value(2).toDouble();
-		QString qCurrency = query.value(3).toString();
-		QString qAccType = query.value(4).toString();
+	if (query.exec()) {
+		while (query.next()) {
+			int qAccountId = query.value(0).toInt();
+			QString qAccNumber = query.value(1).toString();
+			double qBalance = query.value(2).toDouble();
+			QString qCurrency = query.value(3).toString();
+			QString qAccType = query.value(4).toString();
 
-		if (m_currentAccount) delete m_currentAccount;
-		m_currentAccount = new StandardAccount(login, qAccNumber, qBalance, qCurrency, qAccType);
-		m_currentUser->setAccount(m_currentAccount);
+			Account* account = nullptr;
 
-		query.prepare("SELECT account_id, card_number, pin, expiry_date FROM card WHERE account_id= :accId");
-		query.bindValue(":accId", qAccountId);
+			if (qCurrency == "PLN") {
+				account = new StandardAccount(login, qAccNumber, qBalance, qCurrency, qAccType);
+			}
+			else {
+				account = new CurrencyAccount(login, qAccNumber, qBalance, qCurrency, qAccType);
+			}
+			m_currentUser->addAccount(account);
 
-		if (query.exec() && query.next()) {
-			QString qCardNumber = query.value(1).toString();
-			QString qPin = query.value(2).toString();
-			QString qExpiryDate = query.value(3).toDate().toString();
+			QSqlQuery cardQuery(db);
+			
+			cardQuery.prepare("SELECT account_id, card_number, pin, expiry_date FROM card WHERE account_id= :accId");
+			cardQuery.bindValue(":accId", qAccountId);
 
-			if (m_currentCard) delete m_currentCard;
-			m_currentCard = new Card(qAccountId, qCardNumber, qPin, qExpiryDate);
-			m_currentUser->setCard(m_currentCard);
+			if (cardQuery.exec() && cardQuery.next()) {
+				QString qCardNumber = query.value(1).toString();
+				QString qPin = query.value(2).toString();
+				QString qExpiryDate = query.value(3).toDate().toString();
+
+				if (m_currentCard) delete m_currentCard;
+				m_currentCard = new Card(qAccountId, qCardNumber, qPin, qExpiryDate);
+				m_currentUser->setCard(m_currentCard);
+			}
 		}
 	}
 	return true;

@@ -31,7 +31,9 @@ double Account::getBalance() const
 
 void Account::setBalance(double balance)
 {
+    if (m_balance == balance) return;
     m_balance = balance;
+    emit balanceChanged();
 }
 
 QString Account::getCurrency() const

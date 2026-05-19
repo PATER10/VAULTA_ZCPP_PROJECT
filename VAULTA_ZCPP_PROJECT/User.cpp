@@ -55,13 +55,51 @@ QString User::getInitials() const
 
 Account* User::getAccount() const
 {
-	return m_account;
+	return m_activeAccount;
+}
+
+QVariantList User::getAccounts() const
+{
+	QVariantList list;
+	for (Account* account : m_accounts) {
+		list.append(QVariant::fromValue(account));
+	}
+	return list;
+}
+
+void User::addAccount(Account* account)
+{
+	if (!account) return;
+
+	m_accounts.append(account);
+
+	if (!m_activeAccount) {
+		m_activeAccount = account;
+		emit accountChanged();
+	}
+	emit accountsChanged();
+}
+
+Q_INVOKABLE void User::setActiveAccount(Account* account)
+{
+	if (!account || m_activeAccount == account) return;
+	m_activeAccount = account;
+	emit accountChanged();
+}
+
+Q_INVOKABLE void User::setActiveAccountByNumber(QString accountNumber)
+{
+	for (Account* account : m_accounts) {
+		if (account->getAccountNumber() == accountNumber) {
+			setActiveAccount(account);
+			return;
+		}
+	}
 }
 
 void User::setAccount(Account* account)
 {
-	m_account = account;
-	emit accountChanged();
+	addAccount(account);
 }
 
 Card* User::getCard() const

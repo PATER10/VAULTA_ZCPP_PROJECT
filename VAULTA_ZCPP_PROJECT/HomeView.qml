@@ -26,50 +26,84 @@ Item{
             font.bold: true
             color: "#281c9d"
         }
+        ListView{
+            id: accountsList
+            width: parent.width
+            height: 150
+            orientation: ListView.Horizontal
+            spacing: 15
+            clip: true
 
-        Rectangle {
-            width: 300
-            height: 140
-            radius: 16
-            color: "white"
-                    
-            border.color: "#e0e0e0"
-            border.width: 1
+            model: appController.auth.currentUser.accounts
 
-            Column {
-                anchors.fill: parent
-                anchors.margins: 20
-                spacing: 10
+            delegate: Rectangle{
+                width:300
+                height: 140
+                radius: 16
+                color: "white"
 
-                Row {
-                    width: parent.width
-                            
-                    Column {
-                        width: parent.width - 50
-                        Text { text: qsTr("Main Account"); font.bold: true; font.pixelSize: 14; color: "black" }
-                        Text { text: qsTr("Standard"); font.pixelSize: 12; color: "#888" }
-                    }
+                border.color: modelData.accountNumber === appController.auth.currentUser.account.accountNumber
+                    ? "#281c9d" : "#e0e0e0"
+                border.width: modelData.accountNumber === appController.auth.currentUser.account.accountNumber
+                    ? 2 : 1
 
-                    Rectangle {
-                        width: 40
-                        height: 40
-                        radius: 20
-                        color: "#f0f0f5"
-                        Text { text: appController.auth.currentUser.account.currency; anchors.centerIn: parent; font.bold: true; color: "#281c9d"; font.pixelSize: 10 }
+                MouseArea{
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        appController.auth.currentUser.setActiveAccountByNumber(modelData.accountNumber)
+                        appController.bankManager.updateUserTransactions(true)
                     }
                 }
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 10
 
-                Text {
-                    text: Number(appController.auth.currentUser.account.balance).toFixed(2) + " " + appController.auth.currentUser.account.currency
-                    font.pixelSize: 20
-                    font.bold: true
-                    color: "#281c9d"
-                }
-                        
-                Text {
-                    text: appController.auth.currentUser.account.accountNumber
-                    font.pixelSize: 14
-                    color: "#888"
+                    Row{
+                        width: parent.width
+                        Column {
+                            width: parent.width - 50
+                            Text {
+                                text: modelData.currency === "PLN" ? qsTr("Main Account") : qsTr("Currency Account")
+                                font.bold: true
+                                font.pixelSize: 14
+                                color: "black"
+                            }
+
+                            Text {
+                                text: modelData.accountType
+                                font.pixelSize: 12
+                                color: "#888"
+                            }
+                        }
+                        Rectangle {
+                            width: 40
+                            height: 40
+                            radius: 20
+                            color: "#f0f0f5"
+
+                            Text {
+                                text: modelData.currency
+                                anchors.centerIn: parent
+                                font.bold: true
+                                color: "#281c9d"
+                                font.pixelSize: 10
+                            }
+                        }
+                    }
+                    Text {
+                        text: Number(modelData.balance).toFixed(2) + " " + modelData.currency
+                        font.pixelSize: 20
+                        font.bold: true
+                        color: "#281c9d"
+                    }
+
+                    Text {
+                        text: modelData.accountNumber
+                        font.pixelSize: 14
+                        color: "#888"
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ class Account : public QObject
 	Q_PROPERTY(double balance READ getBalance NOTIFY balanceChanged)
 	Q_PROPERTY(QString currency READ getCurrency CONSTANT)
 	Q_PROPERTY(QString accountNumber READ getAccountNumber CONSTANT)
+	Q_PROPERTY(QString accountType READ getAccountType CONSTANT)
 protected:
 	int m_uId, m_id;
 	QString m_accountNumber;

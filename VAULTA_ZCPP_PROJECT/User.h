@@ -17,6 +17,8 @@ class User : public QObject
 	Q_PROPERTY(QString surname READ getUserSurname NOTIFY userDataChanged)
 	Q_PROPERTY(QString initials READ getInitials NOTIFY userDataChanged)
 	Q_PROPERTY(Account* account READ getAccount NOTIFY accountChanged)
+	Q_PROPERTY(Account* activeAccount READ getAccount NOTIFY accountChanged)
+	Q_PROPERTY(QVariantList accounts READ getAccounts NOTIFY accountsChanged)
 	Q_PROPERTY(Card* card READ getCard NOTIFY cardChanged)
 	Q_PROPERTY(QVariantList transactions READ getTransactions NOTIFY transactionsChanged)
 private:
@@ -25,6 +27,8 @@ private:
 	Account* m_account = nullptr;
 	Card* m_card = nullptr;
 	QVariantList m_transactions;
+	QList<Account*> m_accounts;
+	Account* m_activeAccount = nullptr;
 
 public:
 	explicit User(QObject *parent = nullptr) : QObject(parent) {}
@@ -42,7 +46,6 @@ public:
 	QString getPassword() const;
 	void setPassword(QString password);
 	QString getInitials() const;
-	Account* getAccount() const;
 	void setAccount(Account* account);
 	Card* getCard() const;
 	void setCard(Card* card);
@@ -51,11 +54,18 @@ public:
 		m_transactions = transactions;
 		emit transactionsChanged();
 	}
+	Account* getAccount() const;
+	QVariantList getAccounts() const;
+
+	void addAccount(Account* account);
+	Q_INVOKABLE void setActiveAccount(Account* account);
+	Q_INVOKABLE void setActiveAccountByNumber(QString accountNumber);
 
 signals:
 	void userDataChanged();
 	void accountChanged();
 	void cardChanged();
 	void transactionsChanged();
+	void accountsChanged();
 };
 
