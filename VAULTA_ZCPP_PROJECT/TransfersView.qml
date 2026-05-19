@@ -127,18 +127,19 @@ Item {
 
                 onClicked: {
                     errorMsg.visible = false
-                    
-                    var result = bankSystem.makeTransfer(transfersViewRoot.accountNumber, targetAccountInput.text, amountInput.text)
+                    let target = targetAccountInput.text
+                    let val = parseFloat(amountInput.text)
 
-                    if (result.success === true) {
-                        transfersViewRoot.transferSuccessful(result.newBalance)
-                        successPopup.open()
-                        
-                        targetAccountInput.text = ""
-                        amountInput.text = ""
-                    } else {
-                        errorMsg.text = result.message
-                        errorMsg.visible = true
+                    if(target.length > 0 && val > 0){
+                        if(appController.bankManager.transferFunds(target, val)){
+                            successPopup.open()
+                            appController.auth.currentUser.account.balanceChanged()
+                            targetAccountInput.text = ""
+                            amountInput.text = ""
+                        }else{
+                            errorMsg.text = "Transfer Failed. Check balance or account number."
+                            errorMsg.visible = true
+                        }
                     }
                 }
             }

@@ -16,4 +16,5 @@ public:
 	void setAuth(AuthManager* auth) { m_auth = auth; }
 
     bool processTransaction(QString type, double amount); 
+	Q_INVOKABLE bool transferFunds(QString targetAccNum, double amount);
 };
