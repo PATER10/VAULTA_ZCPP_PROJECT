@@ -18,8 +18,8 @@ void BankManager::updateUserTransactions(bool limitToFive)
 
 	int currentUserId = m_auth->currentUserId();
 
-	QString sqlQuery = "SELECT type,accountnumber,amount,targetaccount,timestamp "
-		"FROM transaction WHERE accountnumber = :accNum ";
+	QString sqlQuery = "SELECT type,account_number,amount,target_account,timestamp "
+		"FROM transaction WHERE account_number = :accNum ";
 	
 	if (limitToFive) {
 		sqlQuery += "ORDER BY timestamp DESC LIMIT 5";
@@ -82,7 +82,7 @@ bool BankManager::processTransaction(QString type, double amount)
     updateQuery.bindValue(":accNum", accNum);
 
     QSqlQuery insertQuery(db);
-    insertQuery.prepare("INSERT INTO transaction (type, accountnumber, amount, timestamp) "
+    insertQuery.prepare("INSERT INTO transaction (type, account_number, amount, timestamp) "
         "VALUES (:type, :accNum, :amount, CURRENT_TIMESTAMP)");
     insertQuery.bindValue(":type", type);
     insertQuery.bindValue(":accNum", accNum);
@@ -136,11 +136,11 @@ bool BankManager::transferFunds(QString targetAccNum, double amount)
     QString updateTarget = QString("UPDATE account SET balance = %1 WHERE account_number = '%2'")
         .arg(targetNewBalance).arg(targetAccNum);
 
-    QString saveTransferOut = QString("INSERT INTO transaction (type, accountnumber, amount, targetaccount, timestamp) "
+    QString saveTransferOut = QString("INSERT INTO transaction (type, account_number, amount, target_account, timestamp) "
         "VALUES ('TRANSFER OUT', '%1', %2, '%3', CURRENT_TIMESTAMP)")
         .arg(myAccNum).arg(amount).arg(targetAccNum);
 
-    QString saveTransferIn = QString("INSERT INTO transaction (type, accountnumber, amount, targetaccount, timestamp) "
+    QString saveTransferIn = QString("INSERT INTO transaction (type, account_number, amount, target_account, timestamp) "
         "VALUES ('TRANSFER IN', '%1', %2, '%3', CURRENT_TIMESTAMP)")
         .arg(targetAccNum).arg(amount).arg(myAccNum);
 
