@@ -97,6 +97,26 @@ Q_INVOKABLE void User::setActiveAccountByNumber(QString accountNumber)
 	}
 }
 
+bool User::hasCurrencyAccounts() const
+{
+	for (Account* account : m_accounts) {
+		if (account && account->getCurrency() != "PLN") {
+			return true;
+		}
+	}
+	return false;
+}
+
+Account* User::getAccountByCurrency(QString currency) const
+{
+	for (Account* account : m_accounts) {
+		if (account && account->getCurrency() == currency) {
+			return account;
+		}
+	}
+	return nullptr;
+}
+
 void User::setAccount(Account* account)
 {
 	addAccount(account);

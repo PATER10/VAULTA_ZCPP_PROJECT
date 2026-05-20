@@ -211,5 +211,163 @@ Q_INVOKABLE bool BankManager::addCurrencyAccount(QString currency)
     return true;
 }
 
+bool BankManager::exchangeEuro(QString direction, double amountEuro)
+{
+    static constexpr double EUR_BUY_RATE = 4.40;   // PLN -> EUR
+    static constexpr double EUR_SELL_RATE = 4.10;  // EUR -> PLN
+
+    User* user = m_auth->currentUser();
+    if (!user || amountEuro <= 0) return false;
+
+    Account* plnAccount = nullptr;
+    Account* eurAccount = nullptr;
+
+    for (const QVariant& item : user->getAccounts()) {
+        Account* account = qvariant_cast<Account*>(item);
+        if (!account) continue;
+
+        if (account->getCurrency() == "PLN") {
+            plnAccount = account;
+        }
+        else if (account->getCurrency() == "EUR") {
+            eurAccount = account;
+        }
+    }
+
+    if (!plnAccount || !eurAccount) return false;
+
+    direction = direction.trimmed().toUpper();
+
+    bool plnToEur = direction == "PLN_TO_EUR";
+    bool eurToPln = direction == "EUR_TO_PLN";
+
+    if (!plnToEur && !eurToPln) return false;
+
+    double rate = plnToEur ? EUR_BUY_RATE : EUR_SELL_RATE;
+    double plnAmount = amountEuro * rate;
+
+    if (plnToEur && plnAccount->getBalance() < plnAmount) return false;
+    if (eurToPln && eurAccount->getBalance() < amountEuro) return false;
+
+    QString plnAccountNumber = plnAccount->getAccountNumber();
+    QString eurAccountNumber = eurAccount->getAccountNumber();
+
+    QSqlDatabase db = QSqlDatabase::database();
+    if (!db.transaction()) return false;
+
+    QSqlQuery updatePln(db);
+    QSqlQuery updateEur(db);
+    QSqlQuery insertPlnTransaction(db);
+    QSqlQuery insertEurTransaction(db);
+
+    if (plnToEur) {
+        updatePln.prepare(
+            "UPDATE account SET balance = balance - :amount "
+            "WHERE account_number = :accountNumber"
+        );
+        updatePln.bindValue(":amount", plnAmount);
+        updatePln.bindValue(":accountNumber", plnAccountNumber);
+
+        updateEur.prepare(
+            "UPDATE account SET balance = balance + :amount "
+            "WHERE account_number = :accountNumber"
+        );
+        updateEur.bindValue(":amount", amountEuro);
+        updateEur.bindValue(":accountNumber", eurAccountNumber);
+
+        insertPlnTransaction.prepare(
+            "INSERT INTO transaction "
+            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "VALUES "
+            "('PLN TO EUR', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+        );
+        insertPlnTransaction.bindValue(":accountNumber", plnAccountNumber);
+        insertPlnTransaction.bindValue(":amount", plnAmount);
+        insertPlnTransaction.bindValue(":targetAccount", eurAccountNumber);
+        insertPlnTransaction.bindValue(":exchangeAmount", amountEuro);
+
+        insertEurTransaction.prepare(
+            "INSERT INTO transaction "
+            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "VALUES "
+            "('PLN TO EUR', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+        );
+        insertEurTransaction.bindValue(":accountNumber", eurAccountNumber);
+        insertEurTransaction.bindValue(":amount", amountEuro);
+        insertEurTransaction.bindValue(":targetAccount", plnAccountNumber);
+        insertEurTransaction.bindValue(":exchangeAmount", plnAmount);
+    }
+    else {
+        updateEur.prepare(
+            "UPDATE account SET balance = balance - :amount "
+            "WHERE account_number = :accountNumber"
+        );
+        updateEur.bindValue(":amount", amountEuro);
+        updateEur.bindValue(":accountNumber", eurAccountNumber);
+
+        updatePln.prepare(
+            "UPDATE account SET balance = balance + :amount "
+            "WHERE account_number = :accountNumber"
+        );
+        updatePln.bindValue(":amount", plnAmount);
+        updatePln.bindValue(":accountNumber", plnAccountNumber);
+
+        insertEurTransaction.prepare(
+            "INSERT INTO transaction "
+            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "VALUES "
+            "('EUR TO PLN', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+        );
+        insertEurTransaction.bindValue(":accountNumber", eurAccountNumber);
+        insertEurTransaction.bindValue(":amount", amountEuro);
+        insertEurTransaction.bindValue(":targetAccount", plnAccountNumber);
+        insertEurTransaction.bindValue(":exchangeAmount", plnAmount);
+
+        insertPlnTransaction.prepare(
+            "INSERT INTO transaction "
+            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "VALUES "
+            "('EUR TO PLN', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+        );
+        insertPlnTransaction.bindValue(":accountNumber", plnAccountNumber);
+        insertPlnTransaction.bindValue(":amount", plnAmount);
+        insertPlnTransaction.bindValue(":targetAccount", eurAccountNumber);
+        insertPlnTransaction.bindValue(":exchangeAmount", amountEuro);
+    }
+
+    if (!updatePln.exec() ||
+        !updateEur.exec() ||
+        !insertPlnTransaction.exec() ||
+        !insertEurTransaction.exec()) {
+
+        qDebug() << "EXCHANGE ERROR:"
+            << updatePln.lastError().text()
+            << updateEur.lastError().text()
+            << insertPlnTransaction.lastError().text()
+            << insertEurTransaction.lastError().text();
+
+        db.rollback();
+        return false;
+    }
+
+    if (!db.commit()) {
+        qDebug() << "EXCHANGE COMMIT ERROR:" << db.lastError().text();
+        db.rollback();
+        return false;
+    }
+
+    if (plnToEur) {
+        plnAccount->setBalance(plnAccount->getBalance() - plnAmount);
+        eurAccount->setBalance(eurAccount->getBalance() + amountEuro);
+    }
+    else {
+        eurAccount->setBalance(eurAccount->getBalance() - amountEuro);
+        plnAccount->setBalance(plnAccount->getBalance() + plnAmount);
+    }
+
+    updateUserTransactions(true);
+    return true;
+}
+
 
 

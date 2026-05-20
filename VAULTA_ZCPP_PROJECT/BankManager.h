@@ -18,4 +18,5 @@ public:
     bool processTransaction(QString type, double amount); 
 	Q_INVOKABLE bool transferFunds(QString targetAccNum, double amount);
 	Q_INVOKABLE bool addCurrencyAccount(QString currency);
+	Q_INVOKABLE bool exchangeEuro(QString direction, double amountEuro);
 };
