@@ -243,7 +243,7 @@ bool BankManager::transferFunds(QString targetAccNum, double amount)
     return true;
 }
 
-Q_INVOKABLE bool BankManager::addCurrencyAccount(QString currency)
+bool BankManager::addCurrencyAccount(QString currency)
 {
     User* user = m_auth->currentUser();
     if (!user) return false;
@@ -458,7 +458,166 @@ bool BankManager::exchangeEuro(QString direction, double amountEuro)
 
 bool BankManager::exchangeBetweenAccounts(QString fromAccountNumber, QString toAccountNumber, double fromAmount)
 {
-    return false;
+    static constexpr double EUR_BUY_RATE = 4.40;   // PLN -> EUR
+    static constexpr double EUR_SELL_RATE = 4.10;  // EUR -> PLN
+
+    User* user = m_auth->currentUser();
+    if (!user || fromAmount <= 0) return false;
+
+    fromAccountNumber = fromAccountNumber.trimmed();
+    toAccountNumber = toAccountNumber.trimmed();
+
+    if (fromAccountNumber.isEmpty() || toAccountNumber.isEmpty()) return false;
+    if (fromAccountNumber == toAccountNumber) return false;
+
+    QSqlDatabase db = QSqlDatabase::database();
+    if (!db.transaction()) return false;
+
+    QSqlQuery fromQuery(db);
+    fromQuery.prepare(
+        "SELECT balance, currency, user_id FROM account "
+        "WHERE account_number = :accountNumber"
+    );
+    fromQuery.bindValue(":accountNumber", fromAccountNumber);
+
+    if (!fromQuery.exec() || !fromQuery.next()) {
+        qDebug() << "SOURCE ACCOUNT ERROR:" << fromQuery.lastError().text();
+        db.rollback();
+        return false;
+    }
+
+    double fromBalance = fromQuery.value(0).toDouble();
+    QString fromCurrency = fromQuery.value(1).toString();
+    int fromUserId = fromQuery.value(2).toInt();
+
+    QSqlQuery toQuery(db);
+    toQuery.prepare(
+        "SELECT balance, currency, user_id FROM account "
+        "WHERE account_number = :accountNumber"
+    );
+    toQuery.bindValue(":accountNumber", toAccountNumber);
+
+    if (!toQuery.exec() || !toQuery.next()) {
+        qDebug() << "TARGET ACCOUNT ERROR:" << toQuery.lastError().text();
+        db.rollback();
+        return false;
+    }
+
+    double toBalance = toQuery.value(0).toDouble();
+    QString toCurrency = toQuery.value(1).toString();
+    int toUserId = toQuery.value(2).toInt();
+
+    if (fromUserId != user->getUserId() || toUserId != user->getUserId()) {
+        db.rollback();
+        return false;
+    }
+
+    if (fromCurrency == toCurrency) {
+        db.rollback();
+        return false;
+    }
+
+    if (fromBalance < fromAmount) {
+        db.rollback();
+        return false;
+    }
+
+    double toAmount = 0.0;
+    QString transactionType;
+
+    if (fromCurrency == "PLN" && toCurrency == "EUR") {
+        toAmount = fromAmount / EUR_BUY_RATE;
+        transactionType = "PLN TO EUR";
+    }
+    else if (fromCurrency == "EUR" && toCurrency == "PLN") {
+        toAmount = fromAmount * EUR_SELL_RATE;
+        transactionType = "EUR TO PLN";
+    }
+    else {
+        db.rollback();
+        return false;
+    }
+
+    double fromNewBalance = fromBalance - fromAmount;
+    double toNewBalance = toBalance + toAmount;
+
+    QSqlQuery updateFrom(db);
+    updateFrom.prepare(
+        "UPDATE account SET balance = :balance "
+        "WHERE account_number = :accountNumber"
+    );
+    updateFrom.bindValue(":balance", fromNewBalance);
+    updateFrom.bindValue(":accountNumber", fromAccountNumber);
+
+    QSqlQuery updateTo(db);
+    updateTo.prepare(
+        "UPDATE account SET balance = :balance "
+        "WHERE account_number = :accountNumber"
+    );
+    updateTo.bindValue(":balance", toNewBalance);
+    updateTo.bindValue(":accountNumber", toAccountNumber);
+
+    QSqlQuery insertFromTransaction(db);
+    insertFromTransaction.prepare(
+        "INSERT INTO transaction "
+        "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+        "VALUES "
+        "(:type, :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+    );
+    insertFromTransaction.bindValue(":type", transactionType);
+    insertFromTransaction.bindValue(":accountNumber", fromAccountNumber);
+    insertFromTransaction.bindValue(":amount", fromAmount);
+    insertFromTransaction.bindValue(":targetAccount", toAccountNumber);
+    insertFromTransaction.bindValue(":exchangeAmount", toAmount);
+
+    QSqlQuery insertToTransaction(db);
+    insertToTransaction.prepare(
+        "INSERT INTO transaction "
+        "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+        "VALUES "
+        "(:type, :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+    );
+    insertToTransaction.bindValue(":type", transactionType);
+    insertToTransaction.bindValue(":accountNumber", toAccountNumber);
+    insertToTransaction.bindValue(":amount", toAmount);
+    insertToTransaction.bindValue(":targetAccount", fromAccountNumber);
+    insertToTransaction.bindValue(":exchangeAmount", fromAmount);
+
+    if (!updateFrom.exec() ||
+        !updateTo.exec() ||
+        !insertFromTransaction.exec() ||
+        !insertToTransaction.exec()) {
+
+        qDebug() << "EXCHANGE BETWEEN ACCOUNTS ERROR:"
+            << updateFrom.lastError().text()
+            << updateTo.lastError().text()
+            << insertFromTransaction.lastError().text()
+            << insertToTransaction.lastError().text();
+
+        db.rollback();
+        return false;
+    }
+
+    if (!db.commit()) {
+        qDebug() << "EXCHANGE BETWEEN ACCOUNTS COMMIT ERROR:" << db.lastError().text();
+        db.rollback();
+        return false;
+    }
+
+    for (const QVariant& item : user->getAccounts()) {
+        Account* account = qvariant_cast<Account*>(item);
+        if (!account) continue;
+
+        if (account->getAccountNumber() == fromAccountNumber) {
+            account->setBalance(fromNewBalance);
+        }
+        else if (account->getAccountNumber() == toAccountNumber) {
+            account->setBalance(toNewBalance);
+        }
+    }
+
+    updateUserTransactions(true);
+    return true;
 }
 
 

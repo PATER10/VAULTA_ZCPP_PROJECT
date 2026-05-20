@@ -34,28 +34,31 @@ Item {
             model: appController.auth.currentUser.accounts
 
             delegate: Button {
-                width: 130
-                height: 42
+                width: 75
+                height: 35
+                
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
 
                 contentItem: Text {
-                    text: qsTr("Account ") + modelData.currency
+                    text: modelData.currency
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: modelData.accountNumber === appController.auth.currentUser.account.accountNumber
-                           ? "white"
-                           : "#281c9d"
+                            ? "white"
+                            : "#281c9d"
                     font.bold: true
                 }
 
                 background: Rectangle {
                     radius: 10
                     color: modelData.accountNumber === appController.auth.currentUser.account.accountNumber
-                           ? "#281c9d"
-                           : "white"
+                            ? "#281c9d"
+                            : "white"
                     border.color: "#281c9d"
                     border.width: 1
                 }
-
                 onClicked: {
                     appController.auth.currentUser.setActiveAccountByNumber(modelData.accountNumber)
                     appController.bankManager.updateUserTransactions(true)
