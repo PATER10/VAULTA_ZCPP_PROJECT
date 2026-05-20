@@ -24,6 +24,28 @@ Item{
     property real eurBuyRate: 4.40
     property real eurSellRate: 4.10
     property string exchangeDirection: "PLN_TO_EUR"
+    property var fromAccount: appController.auth.currentUser.account
+    property var toAccount: null
+
+    function ensureDifferentAccounts(changedSide) {
+        if (!fromAccount || !toAccount) return
+
+        if (fromAccount.accountNumber !== toAccount.accountNumber) return
+
+        for (let i = 0; i < appController.auth.currentUser.accounts.length; i++) {
+            let account = appController.auth.currentUser.accounts[i]
+
+            if (account.accountNumber !== fromAccount.accountNumber) {
+                if (changedSide === "from") {
+                    toAccount = account
+                } else {
+                    fromAccount = account
+                }
+                break
+            }
+        }
+        updateExchangeOutput()
+    }
 
     Column {
         id: headerContainer

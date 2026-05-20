@@ -116,7 +116,7 @@ Item{
         }
     }
 
-        ListView {
+    ListView {
         id: transactionList
                 
         anchors.top: headerContainer.bottom
@@ -214,13 +214,51 @@ Item{
                             width: 160; elide: Text.ElideRight
                         }
                     }
+                    Column {
+                        id: transactionCol
+                        property string exchangeCurrency: {
+                            if (!transactionRow.isExchange) return ""
 
-                    Text {
-                        text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
-                        font.bold: true; font.pixelSize: 14
-                        color: transactionRow.isIncoming ? "#2ecc71" : "#e74c3c"
+                            if (modelData.type === "PLN TO EUR") {
+                                return transactionRow.activeCurrency === "PLN" ? "EUR" : "PLN"
+                            }
+
+                            if (modelData.type === "EUR TO PLN") {
+                                return transactionRow.activeCurrency === "EUR" ? "PLN" : "EUR"
+                            }
+
+                            return ""
+                        }
+
+                        property bool isExchangeAmountIncoming: {
+                            if (!transactionRow.isExchange) return false
+
+                            if (modelData.type === "PLN TO EUR") {
+                                return transactionRow.activeCurrency === "PLN" ? true : false
+                            }
+
+                            if (modelData.type === "EUR TO PLN") {
+                                return transactionRow.activeCurrency === "EUR" ? true : false
+                            }
+
+                            return false
+                        }
                         anchors.right: parent.right; anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
+                        Text {
+                            text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
+                            font.bold: true; font.pixelSize: 14
+                            color: transactionRow.isIncoming ? "#2ecc71" : "#e74c3c"
+                        }
+                        Text{
+                            visible: transactionRow.isExchange
+                            text: (transactionCol.isExchangeAmountIncoming ? "+" : "-" )
+                                + Number(modelData.exchangeAmount).toFixed(2) 
+                                + " "
+                                + transactionCol.exchangeCurrency
+                            font.bold: true; font.pixelSize: 12
+                            color: "#999999"
+                        }
                     }
                 }
             }

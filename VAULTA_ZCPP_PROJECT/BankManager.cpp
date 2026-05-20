@@ -19,7 +19,7 @@ void BankManager::updateUserTransactions(bool limitToFive)
 
 	int currentUserId = m_auth->currentUserId();
 
-	QString sqlQuery = "SELECT type,account_number,amount,target_account,timestamp "
+	QString sqlQuery = "SELECT type,account_number,amount,target_account,timestamp, exchange_amount "
 		"FROM transaction WHERE account_number = :accNum ";
 	
 	if (limitToFive) {
@@ -43,6 +43,7 @@ void BankManager::updateUserTransactions(bool limitToFive)
             QDateTime timeFromDb = query.value(4).toDateTime();
             timeFromDb.setTimeZone(QTimeZone::utc());
             t->setTimestamp(timeFromDb.toLocalTime().toString("dd.MM.yyyy HH:mm"));
+            t->setExchangeAmount(query.value(5).toDouble());
 			list.append(QVariant::fromValue(t));
 		}
 		user->setTransactions(list);
@@ -106,10 +107,19 @@ bool BankManager::processTransaction(QString type, double amount)
 
 bool BankManager::transferFunds(QString targetAccNum, double amount)
 {
+    static constexpr double EUR_BUY_RATE = 4.40;   // PLN -> EUR
+    static constexpr double EUR_SELL_RATE = 4.10;  // EUR -> PLN
+
     User* user = m_auth->currentUser();
     if (!user || !user->getAccount() || amount <= 0) return false;
-    QString myAccNum = user->getAccount()->getAccountNumber();
-    if (myAccNum == targetAccNum) return false;
+    Account* sourceAccount = user->getAccount();
+
+    QString sourceAccNum = sourceAccount->getAccountNumber();
+    QString sourceCurrency = sourceAccount->getCurrency();
+
+    targetAccNum = targetAccNum.trimmed();
+
+    if (sourceAccNum == targetAccNum) return false;
     double myBalance = user->getAccount()->getBalance();
 
     if (myBalance < amount) return false;
@@ -119,7 +129,7 @@ bool BankManager::transferFunds(QString targetAccNum, double amount)
 
     QSqlQuery query(db);
 
-    query.prepare("SELECT balance FROM account WHERE account_number = :target");
+    query.prepare("SELECT balance, currency FROM account WHERE account_number = :target");
     query.bindValue(":target", targetAccNum);
 
     if (!query.exec() || !query.next()) {
@@ -128,32 +138,109 @@ bool BankManager::transferFunds(QString targetAccNum, double amount)
         return false;
     }
     double targetBalance = query.value(0).toDouble();
+    QString targetCurrency = query.value(1).toString();
 
-    double myNewBalance = myBalance - amount;
-    QString updateMe = QString("UPDATE account SET balance = %1 WHERE account_number = '%2'")
-        .arg(myNewBalance).arg(myAccNum);
+    double sourceAmount = amount;
+    double targetAmount = amount;
+    double exchangeAmount = 0.00;
+    QString transferOutType = "TRANSFER OUT";
+    QString transferInType = "TRANSFER IN";
 
-    double targetNewBalance = targetBalance + amount;
-    QString updateTarget = QString("UPDATE account SET balance = %1 WHERE account_number = '%2'")
-        .arg(targetNewBalance).arg(targetAccNum);
-
-    QString saveTransferOut = QString("INSERT INTO transaction (type, account_number, amount, target_account, timestamp) "
-        "VALUES ('TRANSFER OUT', '%1', %2, '%3', CURRENT_TIMESTAMP)")
-        .arg(myAccNum).arg(amount).arg(targetAccNum);
-
-    QString saveTransferIn = QString("INSERT INTO transaction (type, account_number, amount, target_account, timestamp) "
-        "VALUES ('TRANSFER IN', '%1', %2, '%3', CURRENT_TIMESTAMP)")
-        .arg(targetAccNum).arg(amount).arg(myAccNum);
-
-    if (query.exec(updateMe) && query.exec(updateTarget) && query.exec(saveTransferOut) && query.exec(saveTransferIn)) {
-        if (db.commit()) {
-            user->getAccount()->setBalance(myNewBalance);
-            updateUserTransactions(true);
-            return true;
+    if (sourceCurrency != targetCurrency) {
+        if (sourceCurrency == "PLN" && targetCurrency == "EUR") {
+            targetAmount = sourceAmount / EUR_BUY_RATE;
+            exchangeAmount = targetAmount;
+        }
+        else if (sourceCurrency == "EUR" && targetCurrency == "PLN") {
+            targetAmount = sourceAmount * EUR_SELL_RATE;
+            exchangeAmount = targetAmount;
+        }
+        else {
+            db.rollback();
+            return false;
         }
     }
-    db.rollback();
-    return false;
+
+    double sourceNewBalance = sourceAccount->getBalance() - sourceAmount;
+    double targetNewBalance = targetBalance + targetAmount;
+
+
+
+    QSqlQuery updateSource(db);
+    updateSource.prepare(
+        "UPDATE account SET balance = :balance "
+        "WHERE account_number = :accountNumber"
+    );
+    updateSource.bindValue(":balance", sourceNewBalance);
+    updateSource.bindValue(":accountNumber", sourceAccNum);
+
+    QSqlQuery updateTarget(db);
+    updateTarget.prepare(
+        "UPDATE account SET balance = :balance "
+        "WHERE account_number = :accountNumber"
+    );
+    updateTarget.bindValue(":balance", targetNewBalance);
+    updateTarget.bindValue(":accountNumber", targetAccNum);
+
+    QSqlQuery insertOut(db);
+    insertOut.prepare(
+        "INSERT INTO transaction "
+        "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+        "VALUES "
+        "(:type, :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+    );
+    insertOut.bindValue(":type", transferOutType);
+    insertOut.bindValue(":accountNumber", sourceAccNum);
+    insertOut.bindValue(":amount", sourceAmount);
+    insertOut.bindValue(":targetAccount", targetAccNum);
+    insertOut.bindValue(":exchangeAmount", exchangeAmount);
+
+    QSqlQuery insertIn(db);
+    insertIn.prepare(
+        "INSERT INTO transaction "
+        "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+        "VALUES "
+        "(:type, :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+    );
+    insertIn.bindValue(":type", transferInType);
+    insertIn.bindValue(":accountNumber", targetAccNum);
+    insertIn.bindValue(":amount", targetAmount);
+    insertIn.bindValue(":targetAccount", sourceAccNum);
+    insertIn.bindValue(":exchangeAmount", sourceAmount);
+
+    if (!updateSource.exec() ||
+        !updateTarget.exec() ||
+        !insertOut.exec() ||
+        !insertIn.exec()) {
+
+        qDebug() << "TRANSFER ERROR:"
+            << updateSource.lastError().text()
+            << updateTarget.lastError().text()
+            << insertOut.lastError().text()
+            << insertIn.lastError().text();
+
+        db.rollback();
+        return false;
+    }
+
+    if (!db.commit()) {
+        qDebug() << "TRANSFER COMMIT ERROR:" << db.lastError().text();
+        db.rollback();
+        return false;
+    }
+
+    sourceAccount->setBalance(sourceNewBalance);
+
+    for (const QVariant& item : user->getAccounts()) {
+        Account* account = qvariant_cast<Account*>(item);
+        if (account && account->getAccountNumber() == targetAccNum) {
+            account->setBalance(targetNewBalance);
+            break;
+        }
+    }
+
+    updateUserTransactions(true);
+    return true;
 }
 
 Q_INVOKABLE bool BankManager::addCurrencyAccount(QString currency)
@@ -367,6 +454,11 @@ bool BankManager::exchangeEuro(QString direction, double amountEuro)
 
     updateUserTransactions(true);
     return true;
+}
+
+bool BankManager::exchangeBetweenAccounts(QString fromAccountNumber, QString toAccountNumber, double fromAmount)
+{
+    return false;
 }
 
 
