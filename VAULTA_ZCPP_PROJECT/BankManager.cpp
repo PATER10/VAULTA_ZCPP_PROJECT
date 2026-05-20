@@ -277,25 +277,27 @@ bool BankManager::exchangeEuro(QString direction, double amountEuro)
 
         insertPlnTransaction.prepare(
             "INSERT INTO transaction "
-            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "(type, account_number, amount, target_account, exchange_amount,exchange_rate timestamp) "
             "VALUES "
-            "('PLN TO EUR', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+            "('PLN TO EUR', :accountNumber, :amount, :targetAccount, :exchangeAmount,:exchangeRate CURRENT_TIMESTAMP)"
         );
         insertPlnTransaction.bindValue(":accountNumber", plnAccountNumber);
         insertPlnTransaction.bindValue(":amount", plnAmount);
         insertPlnTransaction.bindValue(":targetAccount", eurAccountNumber);
         insertPlnTransaction.bindValue(":exchangeAmount", amountEuro);
+        insertPlnTransaction.bindValue(":exchangeRate", EUR_SELL_RATE);
 
         insertEurTransaction.prepare(
             "INSERT INTO transaction "
-            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "(type, account_number, amount, target_account, exchange_amount,exchange_rate, timestamp) "
             "VALUES "
-            "('PLN TO EUR', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+            "('PLN TO EUR', :accountNumber, :amount, :targetAccount, :exchangeAmount,:exchangeRate, CURRENT_TIMESTAMP)"
         );
         insertEurTransaction.bindValue(":accountNumber", eurAccountNumber);
         insertEurTransaction.bindValue(":amount", amountEuro);
         insertEurTransaction.bindValue(":targetAccount", plnAccountNumber);
         insertEurTransaction.bindValue(":exchangeAmount", plnAmount);
+        insertEurTransaction.bindValue(":exchangeRate", EUR_SELL_RATE);
     }
     else {
         updateEur.prepare(
@@ -314,25 +316,27 @@ bool BankManager::exchangeEuro(QString direction, double amountEuro)
 
         insertEurTransaction.prepare(
             "INSERT INTO transaction "
-            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "(type, account_number, amount, target_account, exchange_amount, exchange_rate timestamp) "
             "VALUES "
-            "('EUR TO PLN', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+            "('EUR TO PLN', :accountNumber, :amount, :targetAccount, :exchangeAmount,exchangeRate, CURRENT_TIMESTAMP)"
         );
         insertEurTransaction.bindValue(":accountNumber", eurAccountNumber);
         insertEurTransaction.bindValue(":amount", amountEuro);
         insertEurTransaction.bindValue(":targetAccount", plnAccountNumber);
         insertEurTransaction.bindValue(":exchangeAmount", plnAmount);
+        insertEurTransaction.bindValue(":exchangeRate", EUR_BUY_RATE);
 
         insertPlnTransaction.prepare(
             "INSERT INTO transaction "
-            "(type, account_number, amount, target_account, exchange_amount, timestamp) "
+            "(type, account_number, amount, target_account, exchange_amount,exchange_rate, timestamp) "
             "VALUES "
-            "('EUR TO PLN', :accountNumber, :amount, :targetAccount, :exchangeAmount, CURRENT_TIMESTAMP)"
+            "('EUR TO PLN', :accountNumber, :amount, :targetAccount, :exchangeAmount,:exchangeRate, CURRENT_TIMESTAMP)"
         );
         insertPlnTransaction.bindValue(":accountNumber", plnAccountNumber);
         insertPlnTransaction.bindValue(":amount", plnAmount);
         insertPlnTransaction.bindValue(":targetAccount", eurAccountNumber);
         insertPlnTransaction.bindValue(":exchangeAmount", amountEuro);
+        insertPlnTransaction.bindValue(":exchangeRate", EUR_BUY_RATE);
     }
 
     if (!updatePln.exec() ||

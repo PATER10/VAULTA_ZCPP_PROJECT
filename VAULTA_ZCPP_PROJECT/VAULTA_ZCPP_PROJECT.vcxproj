@@ -122,6 +122,7 @@
     <None Include="AccountsView.qml" />
     <None Include="ATM.qml" />
     <None Include="AtmSelectionScreen.qml" />
+    <None Include="cpp.hint" />
     <None Include="DepositScreen.qml" />
     <None Include="HomeView.qml" />
     <None Include="LoginScreen.qml" />
