@@ -1,4 +1,5 @@
 #include "BankManager.h"
+#include "CurrencyAccount.h"
 #include <QDate>
 #include <QTimeZone>
 #include <QDebug>
@@ -153,6 +154,61 @@ bool BankManager::transferFunds(QString targetAccNum, double amount)
     }
     db.rollback();
     return false;
+}
+
+Q_INVOKABLE bool BankManager::addCurrencyAccount(QString currency)
+{
+    User* user = m_auth->currentUser();
+    if (!user) return false;
+
+    currency = currency.trimmed().toUpper();
+
+    if (currency.isEmpty() || currency == "PLN") return false;
+
+    for (QVariant item : user->getAccounts()) {
+        Account* account = item.value<Account*>();
+        if (account && account->getCurrency() == currency) {
+            return false; // użytkownik już ma takie konto
+        }
+    }
+
+    QString accountNumber = QString::fromStdString(
+        CurrencyAccount::generateAccountNumber(user->getUserId(), currency.toStdString())
+    );
+
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery query(db);
+
+    query.prepare(
+        "INSERT INTO account (user_id, account_number, balance, currency, account_type) "
+        "VALUES (:uid, :accNo, :balance, :currency, :type) "
+        "RETURNING id"
+    );
+
+    query.bindValue(":uid", user->getUserId());
+    query.bindValue(":accNo", accountNumber);
+    query.bindValue(":balance", 0.00);
+    query.bindValue(":currency", currency);
+    query.bindValue(":type", "Currency Account");
+
+    if (!query.exec() || !query.next()) {
+        qDebug() << "ADD ACCOUNT ERROR:" << query.lastError().text();
+        return false;
+    }
+
+    Account* account = new CurrencyAccount(
+        user->getUserId(),
+        accountNumber,
+        0.00,
+        currency,
+        currency + " Account"
+    );
+
+    user->addAccount(account);
+    user->setActiveAccount(account);
+    updateUserTransactions(true);
+
+    return true;
 }
 
 

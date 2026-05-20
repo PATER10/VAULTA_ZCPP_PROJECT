@@ -24,7 +24,44 @@ Item {
             font.bold: true
             color: "#281c9d"
         }
-  
+        ListView {
+            width: parent.width
+            height: 50
+            orientation: ListView.Horizontal
+            spacing: 10
+            clip: true
+
+            model: appController.auth.currentUser.accounts
+
+            delegate: Button {
+                width: 130
+                height: 42
+
+                contentItem: Text {
+                    text: qsTr("Account ") + modelData.currency
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: modelData.accountNumber === appController.auth.currentUser.account.accountNumber
+                           ? "white"
+                           : "#281c9d"
+                    font.bold: true
+                }
+
+                background: Rectangle {
+                    radius: 10
+                    color: modelData.accountNumber === appController.auth.currentUser.account.accountNumber
+                           ? "#281c9d"
+                           : "white"
+                    border.color: "#281c9d"
+                    border.width: 1
+                }
+
+                onClicked: {
+                    appController.auth.currentUser.setActiveAccountByNumber(modelData.accountNumber)
+                    appController.bankManager.updateUserTransactions(true)
+                }
+            }
+        }
         Column {
             spacing: 5
             Row{
@@ -133,7 +170,6 @@ Item {
                     if(target.length > 0 && val > 0){
                         if(appController.bankManager.transferFunds(target, val)){
                             successPopup.open()
-                            appController.auth.currentUser.account.balanceChanged()
                             targetAccountInput.text = ""
                             amountInput.text = ""
                         }else{
