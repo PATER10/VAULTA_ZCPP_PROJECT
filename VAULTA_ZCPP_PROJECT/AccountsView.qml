@@ -13,12 +13,23 @@ Item{
     property var toAccount: null
 
     Component.onCompleted: {
+        refreshEuroRates()
+
         if (appController.auth.currentUser.accounts.length > 0) {
             fromAccount = appController.auth.currentUser.accounts[0]
         }
 
         if (appController.auth.currentUser.accounts.length > 1) {
             toAccount = appController.auth.currentUser.accounts[1]
+        }
+    }
+
+    function refreshEuroRates() {
+        let rates = appController.bankManager.currentEuroRates()
+
+        if (rates.buyRate > 0 && rates.sellRate > 0) {
+            eurBuyRate = rates.buyRate
+            eurSellRate = rates.sellRate
         }
     }
 
@@ -53,23 +64,36 @@ Item{
         exchangeAmountOutput.text = ""
     }
     function ensureDifferentAccounts(changedSide) {
-        if (!fromAccount || !toAccount) return
+    if (!fromAccount || !toAccount) {
+        updateExchangeOutput()
+        return
+    }
 
-        if (fromAccount.accountNumber !== toAccount.accountNumber) return
+    if (fromAccount.accountNumber !== toAccount.accountNumber) {
+        updateExchangeOutput()
+        return
+    }
 
-        for (let i = 0; i < appController.auth.currentUser.accounts.length; i++) {
-            let account = appController.auth.currentUser.accounts[i]
+    for (let i = 0; i < appController.auth.currentUser.accounts.length; i++) {
+        let account = appController.auth.currentUser.accounts[i]
 
-            if (changedSide === "from") {
+        if (changedSide === "from") {
+            if (account.accountNumber !== fromAccount.accountNumber) {
                 toAccount = account
                 toAccountSelect.currentIndex = i
-            } else {
+                break
+            }
+        } else {
+            if (account.accountNumber !== toAccount.accountNumber) {
                 fromAccount = account
                 fromAccountSelect.currentIndex = i
+                break
             }
         }
-        updateExchangeOutput()
     }
+
+    updateExchangeOutput()
+}
     
 
     Column {
@@ -183,7 +207,9 @@ Item{
             }
 
             Text {
-                text: qsTr("EUR buy: 4.40 PLN  |  EUR sell: 4.10 PLN")
+                text: qsTr("EUR buy: ") + accountViewRoot.eurBuyRate.toFixed(4)
+                    + qsTr(" PLN  |  EUR sell: ") + accountViewRoot.eurSellRate.toFixed(4)
+                    + qsTr(" PLN")
                 font.pixelSize: 13
                 color: "#888"
             }
@@ -209,7 +235,6 @@ Item{
                             Behavior on border.width { NumberAnimation { duration: 200 } }
                         }
 
-
                         model: appController.auth.currentUser.accounts
                         textRole: "currency"
 
@@ -228,6 +253,26 @@ Item{
                             }
                             HoverHandler {
                                 cursorShape: Qt.PointingHandCursor
+                            }
+                        }
+                        popup: Popup {
+                            y: fromAccountSelect.height + 4
+                            width: fromAccountSelect.width
+                            padding: 0
+                            implicitHeight: Math.min(contentItem.implicitHeight, 180)
+
+                            background: Rectangle {
+                                color: "white"
+                                radius: 10
+                                border.color: "#d0d0d0"
+                                border.width: 1
+                            }
+
+                            contentItem: ListView {
+                                clip: true
+                                implicitHeight: contentHeight
+                                model: fromAccountSelect.popup.visible ? fromAccountSelect.delegateModel : null
+                                currentIndex: fromAccountSelect.highlightedIndex
                             }
                         }
                         contentItem: Text {
@@ -310,6 +355,26 @@ Item{
                                 cursorShape: Qt.PointingHandCursor
                             }
 
+                        }
+                        popup: Popup {
+                            y: toAccountSelect.height + 4
+                            width: toAccountSelect.width
+                            padding: 0
+                            implicitHeight: Math.min(contentItem.implicitHeight, 180)
+
+                            background: Rectangle {
+                                color: "white"
+                                radius: 10
+                                border.color: "#d0d0d0"
+                                border.width: 1
+                            }
+
+                            contentItem: ListView {
+                                clip: true
+                                implicitHeight: contentHeight
+                                model: toAccountSelect.popup.visible ? toAccountSelect.delegateModel : null
+                                currentIndex: toAccountSelect.highlightedIndex
+                            }
                         }
                        
                         contentItem: Text {

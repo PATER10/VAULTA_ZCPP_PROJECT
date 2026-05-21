@@ -196,14 +196,21 @@ Q_INVOKABLE bool AuthManager::loadUserData(int login)
 
 			QSqlQuery cardQuery(db);
 			
-			cardQuery.prepare("SELECT account_id, card_number, pin, expiry_date FROM card WHERE account_id= :accId");
-			cardQuery.bindValue(":accId", qAccountId);
+			cardQuery.prepare(
+				"SELECT c.account_id, c.card_number, c.pin, c.expiry_date "
+				"FROM card c "
+				"JOIN account a ON c.account_id = a.id "
+				"WHERE a.user_id = :uid AND a.currency = 'PLN' "
+				"LIMIT 1");
+			cardQuery.bindValue(":uid", login);
 
 			if (cardQuery.exec() && cardQuery.next()) {
-				QString qCardNumber = query.value(1).toString();
-				QString qPin = query.value(2).toString();
-				QString qExpiryDate = query.value(3).toDate().toString();
+				QString qCardNumber = cardQuery.value(1).toString();
+				QString qPin = cardQuery.value(2).toString();
+				QString qExpiryDate = cardQuery.value(3).toDate().toString();
 
+				qDebug() << "Card Number: " << qCardNumber;
+				qDebug() << "PIN: " << qPin;
 				if (m_currentCard) delete m_currentCard;
 				m_currentCard = new Card(qAccountId, qCardNumber, qPin, qExpiryDate);
 				m_currentUser->setCard(m_currentCard);

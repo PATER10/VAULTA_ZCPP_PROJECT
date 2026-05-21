@@ -3,10 +3,109 @@
 #include <QDate>
 #include <QTimeZone>
 #include <QDebug>
+#include <QEventLoop>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QTimer>
+#include <QUrl>
+
+namespace {
+    constexpr double FALLBACK_EUR_BUY_RATE = 4.40;   // PLN -> EUR, bank sells EUR to user
+    constexpr double FALLBACK_EUR_SELL_RATE = 4.10;  // EUR -> PLN, bank buys EUR from user
+
+    struct EuroRates {
+        double buyRate = FALLBACK_EUR_BUY_RATE;
+        double sellRate = FALLBACK_EUR_SELL_RATE;
+        bool fromApi = false;
+    };
+
+    EuroRates fetchEuroRates()
+    {
+        EuroRates rates;
+
+        QNetworkAccessManager manager;
+        QNetworkRequest request(QUrl("https://api.nbp.pl/api/exchangerates/rates/c/eur/?format=json"));
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        QEventLoop loop;
+        QTimer timeout;
+        timeout.setSingleShot(true);
+
+        QNetworkReply* reply = manager.get(request);
+        QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+        QObject::connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+
+        timeout.start(3000);
+        loop.exec();
+
+        if (!timeout.isActive()) {
+            reply->abort();
+            reply->deleteLater();
+            qDebug() << "NBP API timeout. Using fallback EUR rates.";
+            return rates;
+        }
+
+        timeout.stop();
+
+        if (reply->error() != QNetworkReply::NoError) {
+            qDebug() << "NBP API error:" << reply->errorString() << "Using fallback EUR rates.";
+            reply->deleteLater();
+            return rates;
+        }
+
+        const QByteArray body = reply->readAll();
+        reply->deleteLater();
+
+        QJsonParseError parseError;
+        const QJsonDocument document = QJsonDocument::fromJson(body, &parseError);
+
+        if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+            qDebug() << "NBP API parse error:" << parseError.errorString() << "Using fallback EUR rates.";
+            return rates;
+        }
+
+        const QJsonArray ratesArray = document.object().value("rates").toArray();
+        if (ratesArray.isEmpty() || !ratesArray.first().isObject()) {
+            qDebug() << "NBP API response has no EUR rates. Using fallback EUR rates.";
+            return rates;
+        }
+
+        const QJsonObject rateObject = ratesArray.first().toObject();
+        const double bid = rateObject.value("bid").toDouble(0.0);
+        const double ask = rateObject.value("ask").toDouble(0.0);
+
+        if (bid <= 0.0 || ask <= 0.0) {
+            qDebug() << "NBP API returned invalid EUR rates. Using fallback EUR rates.";
+            return rates;
+        }
+
+        rates.sellRate = bid;
+        rates.buyRate = ask;
+        rates.fromApi = true;
+
+        return rates;
+    }
+}
 
 BankManager::BankManager(QObject* parent)
 {
 
+}
+
+QVariantMap BankManager::currentEuroRates()
+{
+    const EuroRates rates = fetchEuroRates();
+
+    QVariantMap result;
+    result["buyRate"] = rates.buyRate;
+    result["sellRate"] = rates.sellRate;
+    result["fromApi"] = rates.fromApi;
+
+    return result;
 }
 
 void BankManager::updateUserTransactions(bool limitToFive)
@@ -107,8 +206,9 @@ bool BankManager::processTransaction(QString type, double amount)
 
 bool BankManager::transferFunds(QString targetAccNum, double amount)
 {
-    static constexpr double EUR_BUY_RATE = 4.40;   // PLN -> EUR
-    static constexpr double EUR_SELL_RATE = 4.10;  // EUR -> PLN
+    const EuroRates euroRates = fetchEuroRates();
+    const double EUR_BUY_RATE = euroRates.buyRate;
+    const double EUR_SELL_RATE = euroRates.sellRate;
 
     User* user = m_auth->currentUser();
     if (!user || !user->getAccount() || amount <= 0) return false;
@@ -300,8 +400,9 @@ bool BankManager::addCurrencyAccount(QString currency)
 
 bool BankManager::exchangeEuro(QString direction, double amountEuro)
 {
-    static constexpr double EUR_BUY_RATE = 4.40;   // PLN -> EUR
-    static constexpr double EUR_SELL_RATE = 4.10;  // EUR -> PLN
+    const EuroRates euroRates = fetchEuroRates();
+    const double EUR_BUY_RATE = euroRates.buyRate;
+    const double EUR_SELL_RATE = euroRates.sellRate;
 
     User* user = m_auth->currentUser();
     if (!user || amountEuro <= 0) return false;
@@ -458,8 +559,9 @@ bool BankManager::exchangeEuro(QString direction, double amountEuro)
 
 bool BankManager::exchangeBetweenAccounts(QString fromAccountNumber, QString toAccountNumber, double fromAmount)
 {
-    static constexpr double EUR_BUY_RATE = 4.40;   // PLN -> EUR
-    static constexpr double EUR_SELL_RATE = 4.10;  // EUR -> PLN
+    const EuroRates euroRates = fetchEuroRates();
+    const double EUR_BUY_RATE = euroRates.buyRate;
+    const double EUR_SELL_RATE = euroRates.sellRate;
 
     User* user = m_auth->currentUser();
     if (!user || fromAmount <= 0) return false;
