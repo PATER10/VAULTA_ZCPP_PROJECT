@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QVariantMap>
 #include <string>
 #include <AuthManager.h>
 
@@ -18,4 +19,7 @@ public:
     bool processTransaction(QString type, double amount); 
 	Q_INVOKABLE bool transferFunds(QString targetAccNum, double amount);
 	Q_INVOKABLE bool addCurrencyAccount(QString currency);
+	Q_INVOKABLE bool exchangeEuro(QString direction, double amountEuro);
+	Q_INVOKABLE bool exchangeBetweenAccounts(QString fromAccountNumber, QString toAccountNumber, double fromAmount);
+	Q_INVOKABLE QVariantMap currentEuroRates();
 };
