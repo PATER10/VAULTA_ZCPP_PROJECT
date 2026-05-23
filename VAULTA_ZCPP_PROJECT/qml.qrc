@@ -17,5 +17,6 @@
         <file>AtmSelectionScreen.qml</file>
         <file>DepositScreen.qml</file>
         <file>WithdrawScreen.qml</file>
+        <file>AnalyticsView.qml</file>
     </qresource>
 </RCC>
