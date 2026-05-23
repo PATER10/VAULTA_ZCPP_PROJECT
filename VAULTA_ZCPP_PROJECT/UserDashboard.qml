@@ -209,7 +209,38 @@ Rectangle {
                             userDashboardRoot.activeTab = "transactions"
                         }
                     }
-
+                    Button {
+                        id: analyticsBtn
+                        width: parent.width
+                        height: 45
+                        flat: true
+                        leftPadding: 30
+                        Text { 
+                            text: qsTr("Analytics") 
+                            color: (userDashboardRoot.activeTab === "analytics" || analyticsBtn.hovered) ? "#281c9d" : "#555" 
+                            font.bold: true; horizontalAlignment: Text.AlignHCenter 
+                            font.pixelSize: 14
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        background: Rectangle { 
+                            color: (userDashboardRoot.activeTab === "analytics" || analyticsBtn.hovered) ? "#f0f0f5" : "transparent" 
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                            }
+                            Rectangle {
+                                width: 3
+                                height: parent.height
+                                color: "#281c9d"
+                                visible: userDashboardRoot.activeTab === "analytics"
+                            }
+                        }
+                        onClicked:{
+                            userDashboardRoot.activeTab = "analytics"
+                        }
+                    }
                     Button {
                         id: logOutBtn 
                         width: parent.width
@@ -259,6 +290,7 @@ Rectangle {
                     if (userDashboardRoot.activeTab === "accounts") return "AccountsView.qml"
                     if (userDashboardRoot.activeTab === "transfers") return "TransfersView.qml"
                     if (userDashboardRoot.activeTab === "userDetails") return "UserDetailsView.qml"
+                    if (userDashboardRoot.activeTab === "analytics") return "AnalyticsView.qml"
                     return ""
                 }
             }
