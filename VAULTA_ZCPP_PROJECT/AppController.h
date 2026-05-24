@@ -4,6 +4,7 @@
 #include "BankManager.h"
 #include "LanguageManager.h"
 #include "ATM.h"
+#include "AdminManager.h"
 
 class AppController : public QObject {
 	Q_OBJECT;
@@ -13,6 +14,7 @@ class AppController : public QObject {
 	Q_PROPERTY(BankManager* bankManager READ bankManager CONSTANT)
 	Q_PROPERTY(LanguageManager* L READ L CONSTANT)
 	Q_PROPERTY(ATM* atm READ atm CONSTANT)
+	Q_PROPERTY(AdminManager* adminManager READ adminManager CONSTANT)
 
 public:
 	AppController();
@@ -20,10 +22,12 @@ public:
 	BankManager* bankManager() const { return m_bankManager; }
 	LanguageManager* L() const { return m_langManager;  }
 	ATM* atm() const { return m_atm; }
+	AdminManager* adminManager() const { return m_adminManager; }
 
 private:
 	AuthManager* m_auth;
 	BankManager* m_bankManager;
 	LanguageManager* m_langManager;
 	ATM* m_atm;
+	AdminManager* m_adminManager;
 };

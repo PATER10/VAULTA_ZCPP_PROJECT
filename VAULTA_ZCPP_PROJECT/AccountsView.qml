@@ -544,6 +544,10 @@ Item{
                     color: parent.hovered ? "#3A2DCD" : "#281c9d"
                 }
 
+                HoverHandler{
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 onClicked: {
                     
                     if (appController.bankManager.addCurrencyAccount("EUR")) {

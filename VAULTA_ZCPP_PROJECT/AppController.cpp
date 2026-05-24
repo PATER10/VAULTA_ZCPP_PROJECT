@@ -6,6 +6,7 @@ AppController::AppController()
 	m_bankManager = new BankManager(this);
 	m_langManager = new LanguageManager(this);
 	m_atm = new ATM(m_bankManager, m_auth, this);
+	m_adminManager = new AdminManager(this);
 
 
 	m_langManager->loadSavedLanguage();
