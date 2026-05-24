@@ -11,27 +11,27 @@ Add screenshots of the application here to present the UI and the most important
 
 ### Login
 
-![Login screen](docs/screenshots/login.png)
+<img width="560" height="500" alt="image" src="https://github.com/user-attachments/assets/49d61af9-9b53-4812-a9d1-5f507067cd56" />
 
 ### User Dashboard
 
-![User dashboard](docs/screenshots/dashboard.png)
+<img width="1010" height="671" alt="image" src="https://github.com/user-attachments/assets/a0124691-8300-4b25-9d84-2dc6e3b47da1" />
 
 ### Accounts And Currency Exchange
 
-![Accounts view](docs/screenshots/accounts.png)
+<img width="1013" height="671" alt="image" src="https://github.com/user-attachments/assets/040ff494-c4bf-4147-ab4c-100d9f857354" />
 
 ### Transaction History
 
-![Transactions view](docs/screenshots/transactions.png)
+<img width="1010" height="675" alt="image" src="https://github.com/user-attachments/assets/a1f81c48-7288-489a-8a1f-e222f1de7792" />
 
 ### Financial Analytics
 
-![Analytics view](docs/screenshots/analytics.png)
+<img width="1918" height="1008" alt="image" src="https://github.com/user-attachments/assets/ca3a8ea7-ed44-42cd-9a5c-f15bdea2be1b" />
 
 ### Admin Panel
 
-![Admin dashboard](docs/screenshots/admin-dashboard.png)
+<img width="1917" height="1005" alt="image" src="https://github.com/user-attachments/assets/41f4e0c2-ca15-4372-8869-e14625e9f4b7" />
 
 ## Main Features
 
