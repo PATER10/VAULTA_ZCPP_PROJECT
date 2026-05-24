@@ -12,10 +12,12 @@ class Transaction : public QObject
 	Q_PROPERTY(QString date READ getTimestamp CONSTANT)
 	Q_PROPERTY(QString type READ getType CONSTANT)
 	Q_PROPERTY(QString targetAccount READ getTargetAccount CONSTANT)
+	Q_PROPERTY(double exchangeAmount READ getExchangeAmount CONSTANT)
 private:
 	int m_id;
 	QString m_type, m_accountNumber, m_timestamp, m_targetAccount, getCurrentTimestamp();
 	double m_amount;
+	double m_exchangeAmount = 0.0;
 
 public:
 	explicit Transaction(QObject* parent = nullptr) : QObject(parent) {}
@@ -33,5 +35,7 @@ public:
 	void setTimestamp(QString date);
 	QString getTargetAccount() const;
 	void setTargetAccount(QString targetAccount);
+	double getExchangeAmount() const;
+	void setExchangeAmount(double exchangeAmount);
 };
 

@@ -116,7 +116,7 @@ Item{
         }
     }
 
-        ListView {
+    ListView {
         id: transactionList
                 
         anchors.top: headerContainer.bottom
@@ -156,18 +156,31 @@ Item{
                 Rectangle { width: parent.width - 30; height: 1; color: "#f0f0f0"; anchors.horizontalCenter: parent.horizontalCenter }
 
                 Item {
+                    id: transactionRow
                     width: parent.width; height: 59
+                    property string activeCurrency: appController.auth.currentUser.account.currency
+
+                    property bool isExchange: modelData.type === "PLN TO EUR" || modelData.type === "EUR TO PLN"
+
+                    property bool isIncoming: {
+                        if (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") return true
+
+                        if (modelData.type === "PLN TO EUR" && activeCurrency === "EUR") return true
+                        if (modelData.type === "EUR TO PLN" && activeCurrency === "PLN") return true
+
+                        return false
+                    }
                             
                     Rectangle {
                         id: iconBg
                         width: 36; height: 36; radius: 18
-                        color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#e8f5e9" : "#ffebee"
+                        color: transactionRow.isIncoming ? "#e8f5e9" : "#ffebee"
                         anchors.left: parent.left; anchors.leftMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
-                            text: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "+" : "-"
+                            text: transactionRow.isIncoming ? "+" : "-"
                             font.pixelSize: 20; font.bold: true
-                            color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#2ecc71" : "#e74c3c"
+                            color: transactionRow.isIncoming ? "#2ecc71" : "#e74c3c"
                             anchors.centerIn: parent; anchors.verticalCenterOffset: -1
                         }
                     }
@@ -182,6 +195,8 @@ Item{
                                 if (modelData.type === "TRANSFER IN") return qsTr("Incoming Transfer")
                                 if (modelData.type === "WITHDRAWAL") return qsTr("ATM")
                                 if (modelData.type === "DEPOSIT") return qsTr("ATM")
+                                if (modelData.type === "PLN TO EUR") return qsTr("PLN → EUR")
+                                if (modelData.type === "EUR TO PLN") return qsTr("EUR → PLN")
                                 return qsTr("Transaction")
                             }
                             font.bold: true; font.pixelSize: 14; color: "black"
@@ -192,19 +207,58 @@ Item{
                                 if (modelData.type === "TRANSFER IN") {return qsTr("FROM: ")+ modelData.targetAccount}
                                 if (modelData.type === "WITHDRAWAL") return qsTr("Cash Withdrawal")
                                 if (modelData.type === "DEPOSIT") return qsTr("Cash Deposit")
+                                if (modelData.type === "PLN TO EUR" || modelData.type === "EUR TO PLN") return qsTr("Currency exchange")
                                 return qsTr("Transaction")
                             }
                             font.pixelSize: 11; color: "#999999"
                             width: 160; elide: Text.ElideRight
                         }
                     }
+                    Column {
+                        id: transactionCol
+                        property string exchangeCurrency: {
+                            if (!transactionRow.isExchange) return ""
 
-                    Text {
-                        text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
-                        font.bold: true; font.pixelSize: 14
-                        color: (modelData.type === "TRANSFER IN"  || modelData.type === "DEPOSIT") ? "#2ecc71" : "#e74c3c"
+                            if (modelData.type === "PLN TO EUR") {
+                                return transactionRow.activeCurrency === "PLN" ? "EUR" : "PLN"
+                            }
+
+                            if (modelData.type === "EUR TO PLN") {
+                                return transactionRow.activeCurrency === "EUR" ? "PLN" : "EUR"
+                            }
+
+                            return ""
+                        }
+
+                        property bool isExchangeAmountIncoming: {
+                            if (!transactionRow.isExchange) return false
+
+                            if (modelData.type === "PLN TO EUR") {
+                                return transactionRow.activeCurrency === "PLN" ? true : false
+                            }
+
+                            if (modelData.type === "EUR TO PLN") {
+                                return transactionRow.activeCurrency === "EUR" ? true : false
+                            }
+
+                            return false
+                        }
                         anchors.right: parent.right; anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
+                        Text {
+                            text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
+                            font.bold: true; font.pixelSize: 14
+                            color: transactionRow.isIncoming ? "#2ecc71" : "#e74c3c"
+                        }
+                        Text{
+                            visible: transactionRow.isExchange
+                            text: (transactionCol.isExchangeAmountIncoming ? "+" : "-" )
+                                + Number(modelData.exchangeAmount).toFixed(2) 
+                                + " "
+                                + transactionCol.exchangeCurrency
+                            font.bold: true; font.pixelSize: 12
+                            color: "#999999"
+                        }
                     }
                 }
             }

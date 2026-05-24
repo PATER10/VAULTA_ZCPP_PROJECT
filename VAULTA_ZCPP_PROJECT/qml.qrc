@@ -17,5 +17,9 @@
         <file>AtmSelectionScreen.qml</file>
         <file>DepositScreen.qml</file>
         <file>WithdrawScreen.qml</file>
+        <file>AnalyticsView.qml</file>
+        <file>AdminDashboard.qml</file>
+        <file>AdminUsersView.qml</file>
+        <file>UserManagementView.qml</file>
     </qresource>
 </RCC>

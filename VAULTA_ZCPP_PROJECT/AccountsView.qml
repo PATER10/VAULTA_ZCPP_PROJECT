@@ -2,10 +2,99 @@
 import QtQuick.Controls.Basic 6.10
 
 Item{
+    
     id: accountViewRoot
     anchors.fill: parent
              
     property int contentPadding: 30
+    property real eurBuyRate: 4.40
+    property real eurSellRate: 4.10
+    property var fromAccount: appController.auth.currentUser.account
+    property var toAccount: null
+
+    Component.onCompleted: {
+        refreshEuroRates()
+
+        if (appController.auth.currentUser.accounts.length > 0) {
+            fromAccount = appController.auth.currentUser.accounts[0]
+        }
+
+        if (appController.auth.currentUser.accounts.length > 1) {
+            toAccount = appController.auth.currentUser.accounts[1]
+        }
+    }
+
+    function refreshEuroRates() {
+        let rates = appController.bankManager.currentEuroRates()
+
+        if (rates.buyRate > 0 && rates.sellRate > 0) {
+            eurBuyRate = rates.buyRate
+            eurSellRate = rates.sellRate
+        }
+    }
+
+    function updateExchangeOutput() {
+        let amount = parseFloat(exchangeAmountInput.text)
+
+        if (!fromAccount || !toAccount || isNaN(amount) || amount <= 0) {
+            exchangeAmountOutput.text = ""
+            return
+        }
+
+        if (fromAccount.accountNumber === toAccount.accountNumber) {
+            exchangeAmountOutput.text = ""
+            return
+        }
+
+        if (fromAccount.currency === toAccount.currency) {
+            exchangeAmountOutput.text = ""
+            return
+        }
+
+        if (fromAccount.currency === "PLN" && toAccount.currency === "EUR") {
+            exchangeAmountOutput.text = (amount / eurBuyRate).toFixed(2)
+            return
+        }
+
+        if (fromAccount.currency === "EUR" && toAccount.currency === "PLN") {
+            exchangeAmountOutput.text = (amount * eurSellRate).toFixed(2)
+            return
+        }
+
+        exchangeAmountOutput.text = ""
+    }
+    function ensureDifferentAccounts(changedSide) {
+    if (!fromAccount || !toAccount) {
+        updateExchangeOutput()
+        return
+    }
+
+    if (fromAccount.accountNumber !== toAccount.accountNumber) {
+        updateExchangeOutput()
+        return
+    }
+
+    for (let i = 0; i < appController.auth.currentUser.accounts.length; i++) {
+        let account = appController.auth.currentUser.accounts[i]
+
+        if (changedSide === "from") {
+            if (account.accountNumber !== fromAccount.accountNumber) {
+                toAccount = account
+                toAccountSelect.currentIndex = i
+                break
+            }
+        } else {
+            if (account.accountNumber !== toAccount.accountNumber) {
+                fromAccount = account
+                fromAccountSelect.currentIndex = i
+                break
+            }
+        }
+    }
+
+    updateExchangeOutput()
+}
+    
 
     Column {
         id: headerContainer
@@ -104,6 +193,270 @@ Item{
                 }
             }
         }
+    
+        Column {
+            width: parent.width
+            spacing: 12
+            visible: appController.auth.currentUser.hasCurrencyAccounts
+
+            Text {
+                text: qsTr("Currency exchange")
+                font.pixelSize: 24
+                font.bold: true
+                color: "#281c9d"
+            }
+
+            Text {
+                text: qsTr("EUR buy: ") + accountViewRoot.eurBuyRate.toFixed(4)
+                    + qsTr(" PLN  |  EUR sell: ") + accountViewRoot.eurSellRate.toFixed(4)
+                    + qsTr(" PLN")
+                font.pixelSize: 13
+                color: "#888"
+            }
+            Column{
+                id: exchangeBox
+                width: parent.width
+                spacing: 15
+                Row{
+                    width: parent.width
+                    spacing: 15 
+                    ComboBox {
+                        id: fromAccountSelect
+                        width: parent.width * 0.12
+                        height: 45
+                        palette.text: "white"
+                        background: Rectangle {
+                            radius: 12
+                            border.color: parent.activeFocus ? "#281C9D" : "#e0e0e0"
+                            border.width: parent.activeFocus ? 2 : 1
+                            color: "white"
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on border.color { ColorAnimation { duration: 200 } }
+                            Behavior on border.width { NumberAnimation { duration: 200 } }
+                        }
+
+                        model: appController.auth.currentUser.accounts
+                        textRole: "currency"
+
+                        currentIndex: 0
+
+                        delegate: ItemDelegate {
+                            width: fromAccountSelect.width
+                            text: modelData.currency 
+                        
+                            contentItem: Text{
+                                    text: modelData.currency
+                                    color: "black"
+                            }
+                            background: Rectangle {
+                                color: parent.hovered ? "#f3f3f3" : "white"
+                            }
+                            HoverHandler {
+                                cursorShape: Qt.PointingHandCursor
+                            }
+                        }
+                        popup: Popup {
+                            y: fromAccountSelect.height + 4
+                            width: fromAccountSelect.width
+                            padding: 0
+                            implicitHeight: Math.min(contentItem.implicitHeight, 180)
+
+                            background: Rectangle {
+                                color: "white"
+                                radius: 10
+                                border.color: "#d0d0d0"
+                                border.width: 1
+                            }
+
+                            contentItem: ListView {
+                                clip: true
+                                implicitHeight: contentHeight
+                                model: fromAccountSelect.popup.visible ? fromAccountSelect.delegateModel : null
+                                currentIndex: fromAccountSelect.highlightedIndex
+                            }
+                        }
+                        contentItem: Text {
+                            text: fromAccount ? fromAccount.currency : ""
+                            verticalAlignment: Text.AlignVCenter
+                            leftPadding: 10
+                            color: "black"
+                        }
+
+                        HoverHandler {
+                            cursorShape: Qt.PointingHandCursor
+                        }
+
+                        onActivated: {
+                            accountViewRoot.fromAccount = appController.auth.currentUser.accounts[index]
+                            accountViewRoot.ensureDifferentAccounts("from")
+                        }
+                    }
+                    TextField {
+                        id: exchangeAmountInput
+                        placeholderText: qsTr("Enter amount to exchange")
+                        palette.placeholderText: "gray"
+                        palette.text: "black"
+                        width: parent.width * 0.31
+                        height: 45
+                        font.pixelSize: 14
+                        leftPadding: 15
+                        validator: DoubleValidator { bottom: 0.01; decimals: 2 }
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                
+                        background: Rectangle {
+                            radius: 12
+                            border.color: parent.activeFocus ? "#281C9D" : "#e0e0e0"
+                            border.width: parent.activeFocus ? 2 : 1
+                            color: "white"
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on border.color { ColorAnimation { duration: 200 } }
+                            Behavior on border.width { NumberAnimation { duration: 200 } }
+                        }
+                        onTextChanged: accountViewRoot.updateExchangeOutput()
+                    }
+                    
+                    Text {
+                        text: "→"
+                        font.pixelSize: 24
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    ComboBox {
+                        id: toAccountSelect
+                        width: parent.width * 0.12
+                        height: 45
+                        palette.text: "white"
+                        background: Rectangle {
+                            radius: 12
+                            border.color: parent.activeFocus ? "#281C9D" : "#e0e0e0"
+                            border.width: parent.activeFocus ? 2 : 1
+                            color: "white"
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on border.color { ColorAnimation { duration: 200 } }
+                            Behavior on border.width { NumberAnimation { duration: 200 } }
+                        }
+
+                        model: appController.auth.currentUser.accounts
+                        textRole: "currency"
+
+                        currentIndex: appController.auth.currentUser.accounts.length > 1 ? 1 : 0
+
+                        delegate: ItemDelegate {
+                            width: toAccountSelect.width
+                            contentItem: Text{
+                                text: modelData.currency
+                                color: "black"
+                            }
+                             
+
+                            background: Rectangle {
+                                color: parent.hovered ? "#f3f3f3" : "white"
+                            }
+                            HoverHandler {
+                                cursorShape: Qt.PointingHandCursor
+                            }
+
+                        }
+                        popup: Popup {
+                            y: toAccountSelect.height + 4
+                            width: toAccountSelect.width
+                            padding: 0
+                            implicitHeight: Math.min(contentItem.implicitHeight, 180)
+
+                            background: Rectangle {
+                                color: "white"
+                                radius: 10
+                                border.color: "#d0d0d0"
+                                border.width: 1
+                            }
+
+                            contentItem: ListView {
+                                clip: true
+                                implicitHeight: contentHeight
+                                model: toAccountSelect.popup.visible ? toAccountSelect.delegateModel : null
+                                currentIndex: toAccountSelect.highlightedIndex
+                            }
+                        }
+                       
+                        contentItem: Text {
+                            text: toAccount ? toAccount.currency : ""
+                            verticalAlignment: Text.AlignVCenter
+                            leftPadding: 10
+                            color: "black"
+                        }
+
+                        HoverHandler {
+                            cursorShape: Qt.PointingHandCursor
+                        }
+
+                        onActivated: {
+                            accountViewRoot.toAccount = appController.auth.currentUser.accounts[index]
+                            accountViewRoot.ensureDifferentAccounts("to")
+                        }
+                    }
+                    TextField {
+                        id: exchangeAmountOutput
+                        placeholderText: qsTr("Exchange amount")
+                        palette.placeholderText: "gray"
+                        palette.text: "black"
+                        width: parent.width * 0.31
+                        height: 45
+                        font.pixelSize: 14
+                        leftPadding: 15
+                        validator: DoubleValidator { bottom: 0.01; decimals: 2 }
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                
+                        background: Rectangle {
+                            radius: 12
+                            border.color: parent.activeFocus ? "#281C9D" : "#e0e0e0"
+                            border.width: parent.activeFocus ? 2 : 1
+                            color: "white"
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on border.color { ColorAnimation { duration: 200 } }
+                            Behavior on border.width { NumberAnimation { duration: 200 } }
+                        } 
+                        readOnly: true
+                    }
+                    
+                }
+                Button {
+                    id: confirmExchangeBtn
+                    height: 45
+                    width: confirmExchangeBtn.hovered ? (parent.width / 5) + 5 : parent.width / 5
+                    Behavior on width{ NumberAnimation { duration: 200 } }
+                    contentItem: Text {
+                        text: qsTr("Confirm")
+                        color: "white"
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    background: Rectangle {
+                        radius: 12
+                        color: confirmExchangeBtn.hovered ? "#3A2DCD" : "#281c9d"
+                        MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        }
+                    }
+
+                    onClicked: {
+                        let amount = parseFloat(exchangeAmountInput.text)
+
+                        if (!fromAccount || !toAccount || fromAccount.accountNumber === toAccount.accountNumber) {
+                            return
+                        }
+
+                        if (amount > 0 && appController.bankManager.exchangeBetweenAccounts(fromAccount.accountNumber, toAccount.accountNumber, amount)) {
+                            exchangeAmountInput.text = ""
+                            exchangeAmountOutput.text = ""
+                            appController.bankManager.updateUserTransactions(true)
+                        }
+                    }
+                }
+            } 
+        }
     }
     Button {
         id: addAccountBtn
@@ -191,9 +544,26 @@ Item{
                     color: parent.hovered ? "#3A2DCD" : "#281c9d"
                 }
 
+                HoverHandler{
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 onClicked: {
+                    
                     if (appController.bankManager.addCurrencyAccount("EUR")) {
                         addAccountPopup.close()
+
+                        if (appController.auth.currentUser.accounts.length > 0) {
+                            accountViewRoot.fromAccount = appController.auth.currentUser.accounts[0]
+                            fromAccountSelect.currentIndex = 0
+                        }
+
+                        if (appController.auth.currentUser.accounts.length > 1) {
+                            accountViewRoot.toAccount = appController.auth.currentUser.accounts[1]
+                            toAccountSelect.currentIndex = 1
+                        }
+
+                        accountViewRoot.updateExchangeOutput()
                     } else {
                         console.log("Could not add EUR account")
                     }

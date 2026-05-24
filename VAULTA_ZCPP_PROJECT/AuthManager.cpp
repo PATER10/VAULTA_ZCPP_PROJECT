@@ -103,36 +103,64 @@ Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname,
 //login is the same like userId
 Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 {
+	qDebug() <<"admin123(zahashowane): " << QString::fromStdString(bcrypt::generateHash("admin123", 5));
 	QVariantMap result;
 	result["success"] = false;
 
 	if (login < 1 || password.length() < 5) {
+		result["message"] = "Invalid login or password";
 		return result;
 	}
-	
-	QSqlDatabase db = QSqlDatabase::database();
-	QSqlQuery query;
 
-	query.prepare("SELECT name, surname, password, role FROM \"user\" WHERE id= :login");
+	QSqlQuery query;
+	query.prepare("SELECT password, role, is_active FROM \"user\" WHERE id = :login");
 	query.bindValue(":login", login);
 
-	if (query.exec() && query.next()) {
-		QString hashedPass = query.value(2).toString();
-		if (bcrypt::validatePassword(password.toStdString(), hashedPass.toStdString())) {
-			result["success"] = loadUserData(login);
-		}
+	if (!query.exec()) {
+		qDebug() << "Login query error:" << query.lastError().text();
+		result["message"] = "Database error";
+		return result;
 	}
+
+	if (!query.next()) {
+		result["message"] = "Invalid login or password";
+		return result;
+	}
+
+	QString hashedPass = query.value("password").toString();
+	QString role = query.value("role").toString();
+	bool isActive = query.value("is_active").toBool();
+
+	if (!isActive) {
+		result["message"] = "Account is inactive. Please contact with the Bank admin.";
+		return result;
+	}
+
+	if (!bcrypt::validatePassword(password.toStdString(), hashedPass.toStdString())) {
+		result["message"] = "Invalid login or password";
+		return result;
+	}
+
+	if (!loadUserData(login)) {
+		result["message"] = "Cannot load user data";
+		return result;
+	}
+
+	result["success"] = true;
+	result["role"] = role;
+	result["message"] = "Login successful";
 
 	return result;
 }
 
-Q_INVOKABLE void AuthManager::logout(){
+Q_INVOKABLE void AuthManager::logout() {
 	m_currentUserId = -1;
 	if (m_currentUser) {
 		delete m_currentUser;
 		m_currentUser = nullptr;
 	}
 }
+
 
 Q_INVOKABLE bool AuthManager::loginCard(QString cardNumber, QString pin)
 {
@@ -196,13 +224,18 @@ Q_INVOKABLE bool AuthManager::loadUserData(int login)
 
 			QSqlQuery cardQuery(db);
 			
-			cardQuery.prepare("SELECT account_id, card_number, pin, expiry_date FROM card WHERE account_id= :accId");
-			cardQuery.bindValue(":accId", qAccountId);
+			cardQuery.prepare(
+				"SELECT c.account_id, c.card_number, c.pin, c.expiry_date "
+				"FROM card c "
+				"JOIN account a ON c.account_id = a.id "
+				"WHERE a.user_id = :uid AND a.currency = 'PLN' "
+				"LIMIT 1");
+			cardQuery.bindValue(":uid", login);
 
 			if (cardQuery.exec() && cardQuery.next()) {
-				QString qCardNumber = query.value(1).toString();
-				QString qPin = query.value(2).toString();
-				QString qExpiryDate = query.value(3).toDate().toString();
+				QString qCardNumber = cardQuery.value(1).toString();
+				QString qPin = cardQuery.value(2).toString();
+				QString qExpiryDate = cardQuery.value(3).toDate().toString();
 
 				if (m_currentCard) delete m_currentCard;
 				m_currentCard = new Card(qAccountId, qCardNumber, qPin, qExpiryDate);

@@ -78,4 +78,14 @@ void Transaction::setTargetAccount(QString targetAccount)
 	m_targetAccount = targetAccount;
 }
 
+double Transaction::getExchangeAmount() const
+{
+	return m_exchangeAmount;
+}
+
+void Transaction::setExchangeAmount(double exchangeAmount)
+{
+	m_exchangeAmount = exchangeAmount;
+}
+
 

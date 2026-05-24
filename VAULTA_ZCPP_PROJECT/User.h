@@ -17,10 +17,12 @@ class User : public QObject
 	Q_PROPERTY(QString surname READ getUserSurname NOTIFY userDataChanged)
 	Q_PROPERTY(QString initials READ getInitials NOTIFY userDataChanged)
 	Q_PROPERTY(Account* account READ getAccount NOTIFY accountChanged)
+	Q_PROPERTY(QString role READ getRole CONSTANT)
 	Q_PROPERTY(Account* activeAccount READ getAccount NOTIFY accountChanged)
 	Q_PROPERTY(QVariantList accounts READ getAccounts NOTIFY accountsChanged)
 	Q_PROPERTY(Card* card READ getCard NOTIFY cardChanged)
 	Q_PROPERTY(QVariantList transactions READ getTransactions NOTIFY transactionsChanged)
+	Q_PROPERTY(bool hasCurrencyAccounts READ hasCurrencyAccounts NOTIFY accountsChanged)
 private:
 	int m_id;
 	QString m_name, m_surname, m_role, m_password;
@@ -60,6 +62,8 @@ public:
 	void addAccount(Account* account);
 	Q_INVOKABLE void setActiveAccount(Account* account);
 	Q_INVOKABLE void setActiveAccountByNumber(QString accountNumber);
+	Q_INVOKABLE bool hasCurrencyAccounts() const;
+	Account* getAccountByCurrency(QString currency) const;
 
 signals:
 	void userDataChanged();

@@ -77,6 +77,9 @@
     <ClCompile Include="ATM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AdminManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MainMenu.qml">
@@ -116,6 +119,13 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="WithdrawScreen.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="cpp.hint" />
+    <None Include="AnalyticsView.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="AdminDashboard.qml">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
@@ -165,6 +175,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="ATM.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AdminManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

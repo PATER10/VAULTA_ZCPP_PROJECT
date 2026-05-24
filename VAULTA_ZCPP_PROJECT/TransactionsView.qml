@@ -7,9 +7,71 @@ Item {
 
     Component.onCompleted: {
         appController.bankManager.updateUserTransactions(false)
+        Qt.callLater(refreshTransactions)
     }
             
     property int contentPadding: 30
+    property string selectedSort: "Newest"
+    property string selectedType: "All"
+    property var visibleTransactions: []
+
+    Connections {
+        target: appController.auth.currentUser
+
+        function onTransactionsChanged() {
+            transactionsViewRoot.refreshTransactions()
+        }
+    }
+
+    function parseDate(dateText) {
+        if (!dateText || dateText.length < 10) return new Date(0)
+
+        let parts = dateText.split(" ")
+        let dateParts = parts[0].split(".")
+        let timeParts = parts.length > 1 ? parts[1].split(":") : ["0", "0"]
+
+        return new Date(
+            parseInt(dateParts[2]),
+            parseInt(dateParts[1]) - 1,
+            parseInt(dateParts[0]),
+            parseInt(timeParts[0]),
+            parseInt(timeParts[1])
+        )
+    }
+
+    function matchesType(type) {
+        if (selectedType === "All") return true
+        if (selectedType === "Transfers") return type === "TRANSFER IN" || type === "TRANSFER OUT"
+        if (selectedType === "ATM") return type === "WITHDRAWAL" || type === "DEPOSIT"
+        if (selectedType === "Exchange") return type === "PLN TO EUR" || type === "EUR TO PLN"
+
+        return true
+    }
+
+    function refreshTransactions() {
+        let result = []
+
+        for (let i = 0; i < appController.auth.currentUser.transactions.length; i++) {
+            let transaction = appController.auth.currentUser.transactions[i]
+
+            if (!matchesType(transaction.type)) continue
+
+            result.push(transaction)
+        }
+
+        result.sort(function(a, b) {
+            let dateA = parseDate(a.date).getTime()
+            let dateB = parseDate(b.date).getTime()
+
+            if (selectedSort === "Newest") {
+                return dateB - dateA
+            }
+
+            return dateA - dateB
+        })
+
+        visibleTransactions = result
+    }
 
     Column {
         id: headerContainer
@@ -26,28 +88,212 @@ Item {
             font.bold: true
             color: "#281c9d"
         }
+        Rectangle {
+            width: parent.width
+            height: 140
+            radius: 16
+            color: "white"
+            border.color: "#dedede"
+            border.width: 1
+
+            Column {
+                anchors.fill: parent
+                anchors.margins: 28
+                spacing: 24
+
+                Row {
+                    spacing: 30
+
+                    Column {
+                        spacing: 8
+                        Text { text: qsTr("Sort from"); color: "#4d586b"; font.bold: true; font.pixelSize: 15 }
+                        ComboBox {
+                            id: sortCombo
+                            width: 200
+                            height: 42
+                            model: ["Newest", "Oldest"]
+
+                            background: Rectangle {
+                                color: "#f7f7f8"
+                                radius: 12
+                                border.color: "#d8d8d8"
+                                border.width: 1
+                            }
+
+                            contentItem: Text {
+                                text: sortCombo.displayText
+                                color: "#281c9d"
+                                font.pixelSize: 14
+                                verticalAlignment: Text.AlignVCenter
+                                leftPadding: 20
+                            }
+
+                            delegate: ItemDelegate {
+                                width: sortCombo.width
+                                height: 42
+
+                                contentItem: Text {
+                                    text: modelData
+                                    color: "black"
+                                    font.pixelSize: 14
+                                    verticalAlignment: Text.AlignVCenter
+                                    leftPadding: 14
+                                }
+
+                                background: Rectangle {
+                                    anchors.fill: parent
+                                    anchors.margins: 4
+                                    radius: 8
+                                    color: parent.hovered ? "#f0f0f0" : "white"
+                                }
+
+                                HoverHandler {
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+
+                                onClicked: {
+                                    sortCombo.currentIndex = index
+                                    sortCombo.activated(index)
+                                    sortCombo.popup.close()
+                                }
+                            }
+
+                            popup: Popup {
+                                y: sortCombo.height + 4
+                                width: sortCombo.width
+                                padding: 0
+                                implicitHeight: contentItem.implicitHeight
+
+                                background: Rectangle {
+                                    color: "white"
+                                    radius: 10
+                                    border.color: "#d0d0d0"
+                                    border.width: 1
+                                }
+
+                                contentItem: ListView {
+                                    clip: true
+                                    implicitHeight: contentHeight
+                                    model: sortCombo.popup.visible ? sortCombo.delegateModel : null
+                                    currentIndex: sortCombo.highlightedIndex
+                                }
+                            }
+
+                            onActivated: function(index) {
+                                transactionsViewRoot.selectedSort = model[index]
+                                transactionsViewRoot.refreshTransactions()
+                            }
+                        }
+                    }
+
+                    Column {
+                        spacing: 8
+                        Text { text: qsTr("Type"); color: "#4d586b"; font.bold: true; font.pixelSize: 15 }
+                        ComboBox {
+                            id: typeCombo
+                            width: 200
+                            height: 42
+                            model: ["All", "Transfers", "ATM", "Exchange"]
+
+                            background: Rectangle {
+                                color: "#f7f7f8"
+                                radius: 12
+                                border.color: "#d8d8d8"
+                                border.width: 1
+                            }
+
+                            contentItem: Text {
+                                text: typeCombo.displayText
+                                color: "#281c9d"
+                                font.pixelSize: 14
+                                verticalAlignment: Text.AlignVCenter
+                                leftPadding: 20
+                            }
+
+                            delegate: ItemDelegate {
+                                width: typeCombo.width
+                                height: 42
+
+                                contentItem: Text {
+                                    text: modelData
+                                    color: "black"
+                                    font.pixelSize: 14
+                                    verticalAlignment: Text.AlignVCenter
+                                    leftPadding: 14
+                                }
+
+                                background: Rectangle {
+                                    anchors.fill: parent
+                                    anchors.margins: 4
+                                    radius: 8
+                                    color: parent.hovered ? "#f0f0f0" : "white"
+                                }
+
+                                HoverHandler {
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+
+                                onClicked: {
+                                    typeCombo.currentIndex = index
+                                    typeCombo.activated(index)
+                                    typeCombo.popup.close()
+                                }
+                            }
+
+                            popup: Popup {
+                                y: typeCombo.height + 4
+                                width: typeCombo.width
+                                padding: 0
+                                implicitHeight: contentItem.implicitHeight
+
+                                background: Rectangle {
+                                    color: "white"
+                                    radius: 10
+                                    border.color: "#d0d0d0"
+                                    border.width: 1
+                                }
+
+                                contentItem: ListView {
+                                    clip: true
+                                    implicitHeight: contentHeight
+                                    model: typeCombo.popup.visible ? typeCombo.delegateModel : null
+                                    currentIndex: typeCombo.highlightedIndex
+                                }
+                            }
+
+                            onActivated: function(index) {
+                                transactionsViewRoot.selectedType = model[index]
+                                transactionsViewRoot.refreshTransactions()
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
         Text {
-            text: qsTr("Total transactions: ") + appController.auth.currentUser.transactions.length
+            text: qsTr("Total transactions: ") + transactionsViewRoot.visibleTransactions.length
             font.pixelSize: 14
             color: "#888"
         }
     }
 
     ListView {
-        id: historyList
+        id: transactionList
+                
         anchors.top: headerContainer.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.leftMargin: transactionsViewRoot.contentPadding
-        anchors.topMargin: 20
-        
+        anchors.topMargin: 15
+
         bottomMargin: 20
+                
         clip: true
         spacing: 15
-        
-        model: appController.auth.currentUser.transactions
+                
+        model: transactionsViewRoot.visibleTransactions
 
         delegate: Rectangle {
             width: parent.width - 80
@@ -58,7 +304,7 @@ Item {
 
             Column {
                 anchors.fill: parent
-                
+
                 Rectangle {
                     width: parent.width; height: 30; color: "transparent"
                     Text {
@@ -68,22 +314,35 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
-                
+                        
                 Rectangle { width: parent.width - 30; height: 1; color: "#f0f0f0"; anchors.horizontalCenter: parent.horizontalCenter }
 
                 Item {
+                    id: transactionRow
                     width: parent.width; height: 59
+                    property string activeCurrency: appController.auth.currentUser.account.currency
+
+                    property bool isExchange: modelData.type === "PLN TO EUR" || modelData.type === "EUR TO PLN"
+
+                    property bool isIncoming: {
+                        if (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") return true
+
+                        if (modelData.type === "PLN TO EUR" && activeCurrency === "EUR") return true
+                        if (modelData.type === "EUR TO PLN" && activeCurrency === "PLN") return true
+
+                        return false
+                    }
                             
                     Rectangle {
                         id: iconBg
                         width: 36; height: 36; radius: 18
-                        color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#e8f5e9" : "#ffebee"
+                        color: transactionRow.isIncoming ? "#e8f5e9" : "#ffebee"
                         anchors.left: parent.left; anchors.leftMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
-                            text: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "+" : "-"
+                            text: transactionRow.isIncoming ? "+" : "-"
                             font.pixelSize: 20; font.bold: true
-                            color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#2ecc71" : "#e74c3c"
+                            color: transactionRow.isIncoming ? "#2ecc71" : "#e74c3c"
                             anchors.centerIn: parent; anchors.verticalCenterOffset: -1
                         }
                     }
@@ -98,6 +357,8 @@ Item {
                                 if (modelData.type === "TRANSFER IN") return qsTr("Incoming Transfer")
                                 if (modelData.type === "WITHDRAWAL") return qsTr("ATM")
                                 if (modelData.type === "DEPOSIT") return qsTr("ATM")
+                                if (modelData.type === "PLN TO EUR") return qsTr("PLN → EUR")
+                                if (modelData.type === "EUR TO PLN") return qsTr("EUR → PLN")
                                 return qsTr("Transaction")
                             }
                             font.bold: true; font.pixelSize: 14; color: "black"
@@ -108,24 +369,66 @@ Item {
                                 if (modelData.type === "TRANSFER IN") {return qsTr("FROM: ")+ modelData.targetAccount}
                                 if (modelData.type === "WITHDRAWAL") return qsTr("Cash Withdrawal")
                                 if (modelData.type === "DEPOSIT") return qsTr("Cash Deposit")
+                                if (modelData.type === "PLN TO EUR" || modelData.type === "EUR TO PLN") return qsTr("Currency exchange")
                                 return qsTr("Transaction")
                             }
                             font.pixelSize: 11; color: "#999999"
                             width: 160; elide: Text.ElideRight
                         }
                     }
+                    Column {
+                        id: transactionCol
+                        property string exchangeCurrency: {
+                            if (!transactionRow.isExchange) return ""
 
-                    Text {
-                        text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
-                        font.bold: true; font.pixelSize: 14
-                        color: (modelData.type === "TRANSFER IN" || modelData.type === "DEPOSIT") ? "#2ecc71" : "#e74c3c"
+                            if (modelData.type === "PLN TO EUR") {
+                                return transactionRow.activeCurrency === "PLN" ? "EUR" : "PLN"
+                            }
+
+                            if (modelData.type === "EUR TO PLN") {
+                                return transactionRow.activeCurrency === "EUR" ? "PLN" : "EUR"
+                            }
+
+                            return ""
+                        }
+
+                        property bool isExchangeAmountIncoming: {
+                            if (!transactionRow.isExchange) return false
+
+                            if (modelData.type === "PLN TO EUR") {
+                                return transactionRow.activeCurrency === "PLN" ? true : false
+                            }
+
+                            if (modelData.type === "EUR TO PLN") {
+                                return transactionRow.activeCurrency === "EUR" ? true : false
+                            }
+
+                            return false
+                        }
                         anchors.right: parent.right; anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
+                        Text {
+                            text: Number(modelData.amount).toFixed(2) + " " + appController.auth.currentUser.account.currency
+                            font.bold: true; font.pixelSize: 14
+                            color: transactionRow.isIncoming ? "#2ecc71" : "#e74c3c"
+                        }
+                        Text{
+                            visible: transactionRow.isExchange
+                            text: (transactionCol.isExchangeAmountIncoming ? "+" : "-" )
+                                + Number(modelData.exchangeAmount).toFixed(2) 
+                                + " "
+                                + transactionCol.exchangeCurrency
+                            font.bold: true; font.pixelSize: 12
+                            color: "#999999"
+                        }
                     }
                 }
             }
         }
-        
-        ScrollBar.vertical: ScrollBar { active: true; width: 10 }
+                
+        ScrollBar.vertical: ScrollBar { 
+            active: true 
+            width: 10
+        }
     }
 }
