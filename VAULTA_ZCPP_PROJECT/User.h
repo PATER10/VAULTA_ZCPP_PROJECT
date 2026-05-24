@@ -17,6 +17,7 @@ class User : public QObject
 	Q_PROPERTY(QString surname READ getUserSurname NOTIFY userDataChanged)
 	Q_PROPERTY(QString initials READ getInitials NOTIFY userDataChanged)
 	Q_PROPERTY(Account* account READ getAccount NOTIFY accountChanged)
+	Q_PROPERTY(QString role READ getRole CONSTANT)
 	Q_PROPERTY(Account* activeAccount READ getAccount NOTIFY accountChanged)
 	Q_PROPERTY(QVariantList accounts READ getAccounts NOTIFY accountsChanged)
 	Q_PROPERTY(Card* card READ getCard NOTIFY cardChanged)

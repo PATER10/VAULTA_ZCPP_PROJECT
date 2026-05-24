@@ -137,11 +137,16 @@ Rectangle {
       
                 if(result.success === true) {   
                         
-                    loginScreenRoot.StackView.view.push("UserDashboard.qml")
+                    if (result.role === "admin") {
+                        stackView.push("AdminDashboard.qml")
+                    } else {
+                        stackView.push("UserDashboard.qml")
+                    }
 
                     userIdInput.text = ""
                     passwordInput.text = ""
                 } else {
+                    signInErr.text = result.message || qsTr("Invalid login or password")
                     signInErr.visible = true
                     userIdInput.text = ""
                     passwordInput.text = ""
