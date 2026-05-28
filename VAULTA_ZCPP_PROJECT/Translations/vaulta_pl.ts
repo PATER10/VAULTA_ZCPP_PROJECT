@@ -2,6 +2,39 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pl_PL">
 <context>
+    <name>ATM</name>
+    <message>
+        <location filename="../ATM.qml" line="46"/>
+        <source>Welcome to ATM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ATM.qml" line="53"/>
+        <source>Hello there, Enter your card number and PIN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ATM.qml" line="62"/>
+        <source>Card Number</source>
+        <translation type="unfinished">Numer karty kredytowej</translation>
+    </message>
+    <message>
+        <location filename="../ATM.qml" line="85"/>
+        <source>PIN (4 digits)</source>
+        <translation type="unfinished">PIN (4-cyfrowy)</translation>
+    </message>
+    <message>
+        <location filename="../ATM.qml" line="107"/>
+        <source>Invalid Credit Card Number or PIN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ATM.qml" line="130"/>
+        <source>CONFIRM</source>
+        <translation type="unfinished">POTWIERDŹ</translation>
+    </message>
+</context>
+<context>
     <name>AccountsView</name>
     <message>
         <source>Transaction History</source>
@@ -124,196 +157,396 @@
 <context>
     <name>AnalyticsView</name>
     <message>
-        <location filename="../AnalyticsView.qml" line="549"/>
+        <location filename="../AnalyticsView.qml" line="44"/>
+        <source>Spending Over Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="74"/>
+        <location filename="../AnalyticsView.qml" line="318"/>
+        <source>Jan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="74"/>
+        <location filename="../AnalyticsView.qml" line="318"/>
+        <source>Feb</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="74"/>
+        <location filename="../AnalyticsView.qml" line="318"/>
+        <source>Mar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="74"/>
+        <location filename="../AnalyticsView.qml" line="318"/>
+        <source>Apr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="74"/>
+        <location filename="../AnalyticsView.qml" line="318"/>
+        <source>May</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="74"/>
+        <location filename="../AnalyticsView.qml" line="318"/>
+        <source>Jun</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="75"/>
+        <location filename="../AnalyticsView.qml" line="319"/>
+        <source>Jul</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="75"/>
+        <location filename="../AnalyticsView.qml" line="319"/>
+        <source>Aug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="75"/>
+        <location filename="../AnalyticsView.qml" line="319"/>
+        <source>Sep</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="75"/>
+        <location filename="../AnalyticsView.qml" line="319"/>
+        <source>Oct</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="75"/>
+        <location filename="../AnalyticsView.qml" line="319"/>
+        <source>Nov</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="75"/>
+        <location filename="../AnalyticsView.qml" line="319"/>
+        <source>Dec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="547"/>
         <source>Max Withdrawal</source>
         <translation>MAX WYPŁATA</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="550"/>
+        <location filename="../AnalyticsView.qml" line="548"/>
         <source>Highest ATM withdrawal</source>
         <translation>Największa wypłata z bankomatu</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="556"/>
+        <location filename="../AnalyticsView.qml" line="554"/>
         <source>Min Withdrawal</source>
         <translation>MIN WYPŁATA</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="557"/>
+        <location filename="../AnalyticsView.qml" line="555"/>
         <source>Lowest ATM withdrawal</source>
         <translation>Najmniejsza wypłata z bankomatu</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="563"/>
+        <location filename="../AnalyticsView.qml" line="561"/>
         <source>Withdrawals</source>
         <translation>Wypłaty</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="564"/>
+        <location filename="../AnalyticsView.qml" line="562"/>
         <source>Total ATM withdrawals</source>
         <translation>Suma wszystkich wypłat</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="570"/>
+        <location filename="../AnalyticsView.qml" line="568"/>
         <source>Max Deposit</source>
         <translation>MAX WPŁATA</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="571"/>
+        <location filename="../AnalyticsView.qml" line="569"/>
         <source>Highest ATM deposit</source>
         <translation>Największa wpłata w bankomacie</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="577"/>
+        <location filename="../AnalyticsView.qml" line="575"/>
         <source>Min Deposit</source>
         <translation>MIN WPŁATA</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="578"/>
+        <location filename="../AnalyticsView.qml" line="576"/>
         <source>Lowest ATM deposit</source>
         <translation>Najniższa włata w bankomacie</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="584"/>
+        <location filename="../AnalyticsView.qml" line="582"/>
         <source>Deposits</source>
         <translation>WPŁATY</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="585"/>
+        <location filename="../AnalyticsView.qml" line="583"/>
         <source>Total ATM deposits</source>
         <translation>Suma wszystkich wpłat do bankomatu</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="595"/>
-        <location filename="../AnalyticsView.qml" line="620"/>
-        <location filename="../AnalyticsView.qml" line="645"/>
-        <location filename="../AnalyticsView.qml" line="670"/>
-        <location filename="../AnalyticsView.qml" line="694"/>
+        <location filename="../AnalyticsView.qml" line="593"/>
+        <location filename="../AnalyticsView.qml" line="618"/>
+        <location filename="../AnalyticsView.qml" line="643"/>
+        <location filename="../AnalyticsView.qml" line="668"/>
+        <location filename="../AnalyticsView.qml" line="692"/>
         <source>Max</source>
         <translation>MAX</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="596"/>
-        <location filename="../AnalyticsView.qml" line="695"/>
+        <location filename="../AnalyticsView.qml" line="594"/>
+        <location filename="../AnalyticsView.qml" line="693"/>
         <source>Highest Expense</source>
         <translation>Najwyższy wydatek</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="602"/>
-        <location filename="../AnalyticsView.qml" line="627"/>
-        <location filename="../AnalyticsView.qml" line="652"/>
-        <location filename="../AnalyticsView.qml" line="677"/>
-        <location filename="../AnalyticsView.qml" line="701"/>
+        <location filename="../AnalyticsView.qml" line="600"/>
+        <location filename="../AnalyticsView.qml" line="625"/>
+        <location filename="../AnalyticsView.qml" line="650"/>
+        <location filename="../AnalyticsView.qml" line="675"/>
+        <location filename="../AnalyticsView.qml" line="699"/>
         <source>Min</source>
         <translation>MIN</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="603"/>
-        <location filename="../AnalyticsView.qml" line="702"/>
+        <location filename="../AnalyticsView.qml" line="601"/>
+        <location filename="../AnalyticsView.qml" line="700"/>
         <source>Lowest Expense</source>
         <translation>Najniższy wydatek</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="609"/>
-        <location filename="../AnalyticsView.qml" line="708"/>
+        <location filename="../AnalyticsView.qml" line="607"/>
+        <location filename="../AnalyticsView.qml" line="706"/>
+        <location filename="../AnalyticsView.qml" line="907"/>
         <source>Expenses</source>
         <translation>Wydatki</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="610"/>
+        <location filename="../AnalyticsView.qml" line="608"/>
         <source>Sum expense</source>
         <translation>Suma wszystkich wydatków</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="621"/>
+        <location filename="../AnalyticsView.qml" line="619"/>
         <source>Highest Income</source>
         <translation>Największy przychód</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="628"/>
+        <location filename="../AnalyticsView.qml" line="626"/>
         <source>Lowest Income</source>
         <translation>Najniższy przychód</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="634"/>
-        <location filename="../AnalyticsView.qml" line="715"/>
+        <location filename="../AnalyticsView.qml" line="632"/>
+        <location filename="../AnalyticsView.qml" line="713"/>
         <source>Incomes</source>
         <translation>Przychody</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="635"/>
+        <location filename="../AnalyticsView.qml" line="633"/>
         <source>Sum Incomes</source>
         <translation>Suma przychodów</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="646"/>
+        <location filename="../AnalyticsView.qml" line="644"/>
         <source>Highest Transfer</source>
         <translation>Największa wartość przelewu</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="653"/>
+        <location filename="../AnalyticsView.qml" line="651"/>
         <source>Lowest Transfer</source>
         <translation>Najniższa wartość przelewu</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="659"/>
+        <location filename="../AnalyticsView.qml" line="657"/>
+        <location filename="../AnalyticsView.qml" line="907"/>
         <source>Transfers</source>
         <translation>Przelewy</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="660"/>
+        <location filename="../AnalyticsView.qml" line="658"/>
         <source>Sum transfers</source>
         <translation>Suma przelewów</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="671"/>
+        <location filename="../AnalyticsView.qml" line="669"/>
         <source>Highest Exchange</source>
         <translation>Najwyższa wymiana walut</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="678"/>
+        <location filename="../AnalyticsView.qml" line="676"/>
         <source>Lowest Exchange</source>
         <translation>Najniższa wymiana waluty</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="684"/>
+        <location filename="../AnalyticsView.qml" line="682"/>
         <source>Exchanges</source>
         <translation>Wymiany walut</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="685"/>
+        <location filename="../AnalyticsView.qml" line="683"/>
         <source>Sum Exchanges</source>
         <translation>Suma wymian walut</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="709"/>
+        <location filename="../AnalyticsView.qml" line="707"/>
         <source>Sum expenses</source>
         <translation>Suma wydatków</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="716"/>
+        <location filename="../AnalyticsView.qml" line="714"/>
         <source>Sum income</source>
         <translation>Suma przychodów</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="864"/>
+        <location filename="../AnalyticsView.qml" line="862"/>
         <source>Financial Analysis</source>
         <translation>Analiza Finansowa</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="888"/>
+        <location filename="../AnalyticsView.qml" line="886"/>
         <source>Time Range</source>
         <translation>Zakres</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="907"/>
+        <location filename="../AnalyticsView.qml" line="888"/>
+        <source>Today</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="888"/>
+        <source>Last 7 Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="888"/>
+        <source>Last 30 Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="888"/>
+        <source>This Month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="888"/>
+        <source>This Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="888"/>
+        <source>All Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="905"/>
         <source>Transaction Type</source>
         <translation>Typ transakcji</translation>
     </message>
     <message>
-        <location filename="../AnalyticsView.qml" line="1149"/>
+        <location filename="../AnalyticsView.qml" line="907"/>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="907"/>
+        <source>Income</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="907"/>
+        <source>Exchange</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="907"/>
+        <source>ATM</source>
+        <translation type="unfinished">Bankomat</translation>
+    </message>
+    <message>
+        <location filename="../AnalyticsView.qml" line="1147"/>
         <source>Transactions: </source>
         <translation>Wszystkich transakcji: </translation>
+    </message>
+</context>
+<context>
+    <name>AtmSelectionScreen</name>
+    <message>
+        <location filename="../AtmSelectionScreen.qml" line="46"/>
+        <source>Hello </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AtmSelectionScreen.qml" line="54"/>
+        <source>Select an operation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AtmSelectionScreen.qml" line="75"/>
+        <source>Withdraw Cash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../AtmSelectionScreen.qml" line="105"/>
+        <source>Deposit Cash</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DepositScreen</name>
+    <message>
+        <location filename="../DepositScreen.qml" line="37"/>
+        <source>Deposit Cash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="46"/>
+        <source>Available Funds: </source>
+        <translation type="unfinished">Dostępne środki: </translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="63"/>
+        <source>Amount</source>
+        <translation type="unfinished">Kwota</translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="89"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="105"/>
+        <source>DEPOSIT FUNDS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="110"/>
+        <source>Enter a valid amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="118"/>
+        <source>Transaction failed.Please try again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="147"/>
+        <source>Success!</source>
+        <translation type="unfinished">Sukces!</translation>
+    </message>
+    <message>
+        <location filename="../DepositScreen.qml" line="155"/>
+        <source>Funds deposited successfully.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -585,8 +818,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../TransactionsView.qml" line="114"/>
+        <source>Newest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../TransactionsView.qml" line="114"/>
+        <source>Oldest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../TransactionsView.qml" line="191"/>
         <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../TransactionsView.qml" line="196"/>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../TransactionsView.qml" line="196"/>
+        <source>Transfers</source>
+        <translation type="unfinished">Przelewy</translation>
+    </message>
+    <message>
+        <location filename="../TransactionsView.qml" line="196"/>
+        <source>Exchange</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -605,6 +863,7 @@
         <translation>Transfer przychodzący</translation>
     </message>
     <message>
+        <location filename="../TransactionsView.qml" line="196"/>
         <location filename="../TransactionsView.qml" line="358"/>
         <location filename="../TransactionsView.qml" line="359"/>
         <source>ATM</source>
@@ -623,7 +882,7 @@
     <message>
         <location filename="../TransactionsView.qml" line="372"/>
         <source>Currency exchange</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wymiana walut</translation>
     </message>
     <message>
         <source>Withdrawal</source>
@@ -889,6 +1148,59 @@
         <location filename="../UserManagementView.qml" line="361"/>
         <source>Delete</source>
         <translation>Usuń</translation>
+    </message>
+</context>
+<context>
+    <name>WithdrawScreen</name>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="37"/>
+        <source>Withdraw Cash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="46"/>
+        <source>Available Funds: </source>
+        <translation type="unfinished">Dostępne środki: </translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="64"/>
+        <source>Amount</source>
+        <translation type="unfinished">Kwota</translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="90"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="106"/>
+        <source>WITHDRAW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="113"/>
+        <source>Enter a valid amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="121"/>
+        <source>Insufficient funds or transaction error.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="149"/>
+        <source>Success!</source>
+        <translation type="unfinished">Sukces!</translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="157"/>
+        <source>Please, take your cash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../WithdrawScreen.qml" line="176"/>
+        <source>DONE</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

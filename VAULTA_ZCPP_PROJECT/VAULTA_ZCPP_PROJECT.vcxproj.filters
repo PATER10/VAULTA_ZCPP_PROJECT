@@ -21,6 +21,9 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="Source Files\QML">
+      <UniqueIdentifier>{d631b35b-0b29-4ab9-a396-bc222357b682}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,9 +32,6 @@
     <QtRcc Include="qml.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <None Include="main.qml">
-      <Filter>Source Files</Filter>
-    </None>
     <ClCompile Include="AuthManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,51 +82,60 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="MainMenu.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="LoginScreen.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="SignUpScreen.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="UserDashboard.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="HomeView.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="AccountsView.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="TransfersView.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="TransactionsView.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="UserDetailsView.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="AtmSelectionScreen.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="ATM.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="DepositScreen.qml">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="WithdrawScreen.qml">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="cpp.hint" />
-    <None Include="AnalyticsView.qml">
-      <Filter>Source Files</Filter>
+    <None Include="AccountsView.qml">
+      <Filter>Source Files\QML</Filter>
     </None>
     <None Include="AdminDashboard.qml">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="AdminUsersView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="AnalyticsView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="ATM.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="AtmSelectionScreen.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="DepositScreen.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="HomeView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="LoginScreen.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="main.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="MainMenu.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="SignUpScreen.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="TransactionsView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="TransfersView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="UserDashboard.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="UserDetailsView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="UserManagementView.qml">
+      <Filter>Source Files\QML</Filter>
+    </None>
+    <None Include="WithdrawScreen.qml">
+      <Filter>Source Files\QML</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

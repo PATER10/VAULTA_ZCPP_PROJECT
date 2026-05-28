@@ -111,7 +111,7 @@ Item {
                             id: sortCombo
                             width: 200
                             height: 42
-                            model: ["Newest", "Oldest"]
+                            model: [qsTr("Newest"), qsTr("Oldest")]
 
                             background: Rectangle {
                                 color: "#f7f7f8"
@@ -193,7 +193,7 @@ Item {
                             id: typeCombo
                             width: 200
                             height: 42
-                            model: ["All", "Transfers", "ATM", "Exchange"]
+                            model: [qsTr("All"), qsTr("Transfers"), qsTr("ATM"), qsTr("Exchange")]
 
                             background: Rectangle {
                                 color: "#f7f7f8"

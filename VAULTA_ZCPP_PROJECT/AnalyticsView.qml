@@ -8,9 +8,9 @@ Item {
         property int contentPadding: 30
         property int minContentWidth: 680
         property int maxContentWidth: 1800
-        property string selectedRange: qsTr("All Time")
-        property string selectedType: qsTr("All")
-        property string selectedSort: qsTr("Date")
+        property string selectedRange: "All Time"
+        property string selectedType: "All"
+        property string selectedSort: "Date"
 
         property string activeMetric: "sumExpense"
         property var chartPoints: []
@@ -50,8 +50,8 @@ Item {
 
 
         Component.onCompleted: {
-            selectedRange = qsTr("All Time")
-            selectedType = qsTr("All")
+            selectedRange = "All Time"
+            selectedType = "All"
 
             appController.bankManager.updateUserTransactions(false)
 
@@ -315,8 +315,8 @@ Item {
             if (selectedRange === "This Year") {
                 let parts = key.split("-")
                 let monthIndex = parseInt(parts[1]) - 1
-                let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                let months = [qsTr("Jan"), qsTr("Feb"), qsTr("Mar"), qsTr("Apr"), qsTr("May"), qsTr("Jun"),
+                            qsTr("Jul"), qsTr("Aug"), qsTr("Sep"), qsTr("Oct"), qsTr("Nov"), qsTr("Dec")]
 
                 return months[monthIndex]
             }
@@ -885,7 +885,7 @@ Item {
                                 spacing: 8
                                 Text { text: qsTr("Time Range"); color: "#4d586b"; font.bold: true; font.pixelSize: 15 }
                                 FilterCombo {
-                                    model: ["Today","Last 7 Days", "Last 30 Days", "This Month",  "This Year", "All Time"]
+                                    model: [qsTr("Today"),qsTr("Last 7 Days"), qsTr("Last 30 Days"), qsTr("This Month"),  qsTr("This Year"), qsTr("All Time")]
                                     comboWidth: 180
                                     currentIndex: 5
                                     onActivated: function(index) {
@@ -904,7 +904,7 @@ Item {
                                 spacing: 8
                                 Text { text: qsTr("Transaction Type"); color: "#4d586b"; font.bold: true; font.pixelSize: 15 }
                                 FilterCombo {
-                                    model: ["All", "Expenses", "Income", "Transfers", "Exchange", "ATM"]
+                                    model: [qsTr("All"), qsTr("Expenses"), qsTr("Income"), qsTr("Transfers"), qsTr("Exchange"), qsTr("ATM")]
                                     comboWidth: 180
                                     currentIndex: 0
                                     onActivated: function(index) {
