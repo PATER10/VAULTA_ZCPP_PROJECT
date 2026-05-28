@@ -103,7 +103,6 @@ Q_INVOKABLE QVariantMap AuthManager::registerUser(QString name, QString surname,
 //login is the same like userId
 Q_INVOKABLE QVariantMap AuthManager::loginUser(int login, QString password)
 {
-	qDebug() <<"admin123(zahashowane): " << QString::fromStdString(bcrypt::generateHash("admin123", 5));
 	QVariantMap result;
 	result["success"] = false;
 

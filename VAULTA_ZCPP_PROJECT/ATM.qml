@@ -43,14 +43,14 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter 
 
             Text {
-                text: "Welcome to ATM"
+                text: qsTr("Welcome to ATM")
                 color: "#281C9D"
                 font.bold: true
                 font.pixelSize: 24
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Text {
-                text: "Hello there, Enter your card number and PIN"
+                text: qsTr("Hello there, Enter your card number and PIN")
                 font.bold: true
                 font.pixelSize: 16
                 color: "#343434"
@@ -59,7 +59,7 @@ Rectangle {
 
             TextField {
                 id: userCardNumberInput
-                placeholderText: "Card Number"
+                placeholderText: qsTr("Card Number")
                 palette.placeholderText: "gray"
                 palette.text: "black"
                 height: 40
@@ -82,7 +82,7 @@ Rectangle {
 
             TextField {
                 id: pinInput
-                placeholderText: "PIN (4 digits)"
+                placeholderText: qsTr("PIN (4 digits)")
                 palette.placeholderText: "gray"
                 palette.text: "black"
                 height: 40
@@ -104,7 +104,7 @@ Rectangle {
             }
             Text{
                 id: atmSignInErr
-                text: "Invalid Credit Card Number or PIN"
+                text: qsTr("Invalid Credit Card Number or PIN")
                 font.bold: true
                 visible: false
                 font.pixelSize: 14
@@ -127,7 +127,7 @@ Rectangle {
                         cursorShape: Qt.PointingHandCursor
                     }
                 }
-                Text { text: "CONFIRM"; color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
+                Text { text: qsTr("CONFIRM"); color: "white"; font.pixelSize: 14; anchors.centerIn: parent; font.bold: true }
 
                 onClicked: {
                     var cardNumber = userCardNumberInput.text

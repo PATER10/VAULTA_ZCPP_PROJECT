@@ -34,7 +34,7 @@ Rectangle {
         spacing: 25
 
         Text {
-            text: "Withdraw Cash"
+            text: qsTr("Withdraw Cash")
             font.bold: true; font.pixelSize: 24; color: "#281C9D"
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -43,7 +43,7 @@ Rectangle {
             width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             Text { 
-                text: "Available Funds: "
+                text: qsTr("Available Funds: ")
                 color: "#343434"
                 font.pixelSize: 14
                 font.bold: true
@@ -61,7 +61,7 @@ Rectangle {
             
             TextField {
                 id: amountInput
-                placeholderText: "Amount"
+                placeholderText: qsTr("Amount")
                 palette.placeholderText: "gray"
                 palette.text: "black"
                 width: parent.width
@@ -87,7 +87,7 @@ Rectangle {
         Text {
             id: errorMsg
             visible: false
-            text: "Error"
+            text: qsTr("Error")
             color: "#d40f12"
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -103,14 +103,14 @@ Rectangle {
                 color: confirmBtn.hovered ? "#3A2DCD" : "#281c9d"
                 MouseArea { anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: confirmBtn.clicked() }
             }
-            contentItem: Text { text: "WITHDRAW"; color: "white"; font.bold: true; font.pixelSize: 16; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+            contentItem: Text { text: qsTr("WITHDRAW"); color: "white"; font.bold: true; font.pixelSize: 16; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
 
             onClicked: {
                 errorMsg.visible = false
                 let amount = parseFloat(amountInput.text)
                 
                 if (isNaN(amount) || amount <= 0) {
-                    errorMsg.text = "Enter a valid amount"
+                    errorMsg.text = qsTr("Enter a valid amount")
                     errorMsg.visible = true
                     return
                 }
@@ -118,7 +118,7 @@ Rectangle {
                     successPopup.open()
                     amountInput.text = ""
                 } else {
-                    errorMsg.text = "Insufficient funds or transaction error."
+                    errorMsg.text = qsTr("Insufficient funds or transaction error.")
                     errorMsg.visible = true
                 }
             }
@@ -146,7 +146,7 @@ Rectangle {
             spacing: 20
 
             Text {
-                text: "Success!"
+                text: qsTr("Success!")
                 color: "#281C9D"
                 font.bold: true
                 font.pixelSize: 24
@@ -154,7 +154,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Text {
-                text: "Please, take your cash"
+                text: qsTr("Please, take your cash")
                 color: "#555"
                 font.pixelSize: 16
             }
@@ -173,7 +173,7 @@ Rectangle {
                         cursorShape: Qt.PointingHandCursor
                     }
                 }
-                Text { text: "DONE"; color: "white"; font.bold: true; anchors.centerIn: parent; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter;  }
+                Text { text: qsTr("DONE"); color: "white"; font.bold: true; anchors.centerIn: parent; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter;  }
                 onClicked: {
                     withdrawRoot.StackView.view.pop();
                       

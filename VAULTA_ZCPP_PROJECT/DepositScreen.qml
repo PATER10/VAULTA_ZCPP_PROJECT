@@ -34,7 +34,7 @@ Rectangle {
         spacing: 25
 
         Text {
-            text: "Deposit Cash"
+            text: qsTr("Deposit Cash")
             font.bold: true; font.pixelSize: 24; color: "#281C9D"
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -43,7 +43,7 @@ Rectangle {
             width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             Text { 
-                text: "Available Funds: "
+                text: qsTr("Available Funds: ")
                 color: "#343434"
                 font.pixelSize: 14
                 font.bold: true
@@ -60,7 +60,7 @@ Rectangle {
             width: parent.width; spacing: 10
             TextField {
                 id: amountInput
-                placeholderText: "Amount"
+                placeholderText: qsTr("Amount")
                 palette.placeholderText: "gray"
                 palette.text: "black"
                 width: parent.width
@@ -86,7 +86,7 @@ Rectangle {
         Text {
             id: errorMsg
             visible: false
-            text: "Error"
+            text: qsTr("Error")
             color: "#d40f12"
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -102,12 +102,12 @@ Rectangle {
                 color: confirmBtn.hovered ? "#3A2DCD" : "#281c9d"
                 MouseArea { anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: confirmBtn.clicked() }
             }
-            contentItem: Text { text: "DEPOSIT FUNDS"; color: "white"; font.bold: true; font.pixelSize: 16; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+            contentItem: Text { text: qsTr("DEPOSIT FUNDS"); color: "white"; font.bold: true; font.pixelSize: 16; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
 
             onClicked: {
                 var amount = parseFloat(amountInput.text)
                 if (isNaN(amount) || amount <= 0) {
-                    errorMsg.text = "Enter a valid amount"
+                    errorMsg.text = qsTr("Enter a valid amount")
                     errorMsg.visible = true
                     return
                 }
@@ -115,7 +115,7 @@ Rectangle {
                     successPopup.open() 
                     amountInput.text = ""
                 } else {
-                    errorMsg.text = "Transaction failed.Please try again."
+                    errorMsg.text = qsTr("Transaction failed.Please try again.")
                     errorMsg.visible = true
                 }
                 errorMsg.visible = false
@@ -144,7 +144,7 @@ Rectangle {
             spacing: 20
 
             Text {
-                text: "Success!"
+                text: qsTr("Success!")
                 color: "#281C9D"
                 font.bold: true
                 font.pixelSize: 24
@@ -152,7 +152,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Text {
-                text: "Funds deposited successfully."
+                text: qsTr("Funds deposited successfully.")
                 color: "#555"
                 font.pixelSize: 16
             }

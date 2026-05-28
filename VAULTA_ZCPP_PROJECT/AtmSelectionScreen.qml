@@ -43,7 +43,7 @@ Rectangle {
         spacing: 10
 
         Text {
-            text: "Hello " + appController.atm.userName + " " + appController.atm.userSurname
+            text: qsTr("Hello ") + appController.atm.userName + " " + appController.atm.userSurname
             font.bold: true
             font.pixelSize: 28
             color: "#281C9D"
@@ -51,7 +51,7 @@ Rectangle {
         }
 
         Text {
-            text: "Select an operation"
+            text: qsTr("Select an operation")
             font.pixelSize: 18
             color: "#555"
             font.bold: true
@@ -72,7 +72,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             
             Text {
-                text: "Withdraw Cash"
+                text: qsTr("Withdraw Cash")
                 font.bold: true
                 font.pixelSize: 18
                 color: "white"
@@ -102,7 +102,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             
             Text {
-                text: "Deposit Cash"
+                text: qsTr("Deposit Cash")
                 font.bold: true
                 font.pixelSize: 18
                 color: "#281c9d"

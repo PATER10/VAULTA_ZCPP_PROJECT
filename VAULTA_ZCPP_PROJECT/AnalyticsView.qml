@@ -8,9 +8,9 @@ Item {
         property int contentPadding: 30
         property int minContentWidth: 680
         property int maxContentWidth: 1800
-        property string selectedRange: "All Time"
-        property string selectedType: "All"
-        property string selectedSort: "Date"
+        property string selectedRange: qsTr("All Time")
+        property string selectedType: qsTr("All")
+        property string selectedSort: qsTr("Date")
 
         property string activeMetric: "sumExpense"
         property var chartPoints: []
@@ -41,7 +41,7 @@ Item {
 
         property int statsVersion: 0
 
-        property string chartTitle: "Spending Over Time"
+        property string chartTitle: qsTr("Spending Over Time")
         property int hoveredPointIndex: -1
         property real mouseXOnChart: 0
         property real mouseYOnChart: 0
@@ -50,8 +50,8 @@ Item {
 
 
         Component.onCompleted: {
-            selectedRange = "All Time"
-            selectedType = "All"
+            selectedRange = qsTr("All Time")
+            selectedType = qsTr("All")
 
             appController.bankManager.updateUserTransactions(false)
 
@@ -71,14 +71,13 @@ Item {
         }
 
         function monthLabel(date) {
-            let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            let months = [qsTr("Jan"), qsTr("Feb"), qsTr("Mar"), qsTr("Apr"), qsTr("May"), qsTr("Jun"),
+                            qsTr("Jul"), qsTr("Aug"), qsTr("Sep"), qsTr("Oct"), qsTr("Nov"), qsTr("Dec")]
 
             return months[date.getMonth()]
         }
 
         function parseDate(dateText) {
-            // expects: dd.MM.yyyy HH:mm
             if (!dateText || dateText.length < 10) return new Date()
 
             let parts = dateText.split(" ")
@@ -110,7 +109,6 @@ Item {
 
         function matchesRange(transactionDate) {
             let now = new Date()
-            console.log("range check:", selectedRange, transactionDate)
 
             if (selectedRange === "All Time") return true
 
